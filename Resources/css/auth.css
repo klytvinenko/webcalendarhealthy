@@ -1,0 +1,121 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+}
+body{
+  font-family: 'Poppins', sans-serif;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+h1{
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+.page-auth{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 320px;
+  padding: 40px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+}
+form{
+  width: 100%;
+}
+input{
+  height: 46px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 0 16px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  background: #fafafa;
+}
+button{
+  height: 46px;
+  width: 100%;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 5px;
+  background: #1877f2;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+button:hover{
+  background: #42a5f5;
+}
+button:active{
+  background: #0d47a1;
+}
+button:focus{
+  outline: none;
+}
+input:focus{
+  outline: none;
+}
+a{
+  margin-top: 20px;
+  color: #1877f2;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+input{
+  transition: border-color 0.15s ease;
+
+}
+button.secondary {
+  background: #f0f2f5;
+  color: #333;
+}
+button.secondary:hover{
+  background: #dbdbdb;
+}
+button.secondary:active{
+  background: #c9c9c9;
+}
+p.msg{
+  margin: 5px 0;
+  color: red;
+  font-size: 14px;
+  font-weight: bolder;
+  /* padding: 5px; */
+  width: 100%;
+  /* margin: 8px 0 5px 0; */
+  /* border:1px solid red; */
+  /* border-radius: 5px; */
+  /* background-color: #ffdddd; */
+}
+input.not-valid,
+select.not-valid,
+textarea.not-valid{
+  border-color: red;
+}
+input.not-valid:placeholder-shown,
+select.not-valid:placeholder-shown,
+textarea.not-valid:placeholder-shown{
+  background-color: #ffdddd;
+}
+form legend{
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.msg-success{
+  color: green;
+  font-size: 14px;
+  font-weight: bolder;
+  width: 100%;
+}

@@ -1,0 +1,188 @@
+* {
+  margin: 0;
+  padding: 0;
+
+}
+
+body {
+  background-color: rgb(159, 226, 156);
+  color: gray;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+#calendar {
+  position: absolute;
+  background: whitesmoke;
+  height: 80%;
+  width: 80%;
+  margin: 4% 8%;
+  padding: 2%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow-y: scroll;
+
+}
+
+#calendar #header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+
+
+}
+
+#calendar #header h2 {
+  font-size: 40px;
+  margin:0 100px;
+  /* color: black; */
+}
+
+#calendar #header h3 {
+
+  font-size: 30px;
+}
+#calendar #header h3:hover {
+color: black;
+cursor: pointer;
+}
+#calendar #days_of_week {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 100%;
+  font-size: 25px;
+  font-weight: bold;
+
+}
+
+#calendar #days_of_week .day-of-week {
+}
+
+#calendar #body {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 14.3% 14.3% 14.3% 14.3% 14.3% 14.3% 14.3%;
+  /* grid-template-rows: 20% 20% 20% 20% 20%; */
+
+}
+
+#calendar #body .day-cell{
+  
+  border-radius: 5px;
+  border: lightgray 1px solid;
+  margin: 3px;
+  padding: 3px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+}
+.info{
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+}
+.info .date{
+
+}
+.info .icons{
+
+}
+.info .icons ion-icon{
+  font-size: 25px;
+}
+
+ion-icon.green{
+  color:green;
+}
+.menu{
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+
+#calendar #body .day-cell.empty{
+  border:none;
+  background-color: lightgray
+
+}
+
+#calendar #body .day-cell.current{
+  
+
+  border: rgb(212, 176, 110) 2px solid;
+}
+
+
+
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+.column{
+  display: flex;
+  flex-direction: column;
+}
+form{
+display: flex;
+flex-direction: column;
+margin: 10px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+button{
+margin: 5px;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 5px;
+cursor: pointer;
+
+}
+.btn-primary{
+background-color: lightgreen;
+}
+.btn-secondary{
+background-color: lightblue;
+}
+.form-control{
+margin: 5px;
+display: flex;
+flex-direction: column;
+/* width: max-content; */
+width: 100%;
+
+}
+input{
+padding: 5px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+select{
+padding: 5px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+textarea{
+padding: 5px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+legend{
+font-weight: bold; 
+font-size: 1.5em;
+margin-bottom: 10px;
+align-self: center;
+}
+label{
+margin-bottom: 5px;
+font-weight: bold;
+}

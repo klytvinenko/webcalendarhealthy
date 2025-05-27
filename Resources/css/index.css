@@ -1,0 +1,884 @@
+:root {
+    --clr1: #AD7849;
+    --clr2: #f7d5a5;
+    --clr3: #f3e3d3;
+    --background: #fff7f3;
+    --text: #8c5a3c;
+    --text-white: #e6d5c3;
+    --brd: #a06c47;
+    /* buttons */
+    --btn: #a36244;
+    --btn-add: #a8d695;
+    /* м'який трав'янисто-оливковий */
+    --btn-show: #f5c98a;
+    /* теплий пастельно-абрикосовий */
+    --btn-edit: #8cb9f0;
+    /* світло-блакитний, спокійний */
+    --btn-remove: #e29797;
+    /* м'який приглушений червоно-рожевий */
+    --btn-save: #9ad6b0;
+    /* ніжний теплий зелений */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+    height: 100%;
+    /* font-family: helvetica neue, helvetica, arial, sans-serif;
+  font-weight: 200; */
+    background-color: var(--background);
+}
+
+main {
+    font-family: sans-serif;
+    margin: 40px;
+    border: 2px solid var(--brd);
+    border-radius: 10px;
+    padding: 20px;
+    /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
+    color: var(--text);
+    background-color: var(--clr3);
+}
+
+/* navbar */
+
+nav {
+    font-family: sans-serif;
+    position: sticky;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 70px;
+    align-items: center;
+    background-color: var(--clr2);
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+nav .nav-label {
+    font-family: math;
+    background-color: var(--clr1);
+    align-content: center;
+    height: 100%;
+    padding: 0 20px;
+    font-size: 30px;
+}
+
+nav .nav-label:hover {
+    cursor: pointer;
+}
+
+nav .nav-menu {
+    display: flex;
+    flex-direction: row;
+}
+
+nav .nav-options {
+    display: flex;
+    flex-direction: row;
+
+}
+
+nav .profile-link {
+    text-decoration: underline;
+
+}
+
+nav a {
+    text-decoration: none;
+    font-size: 20px;
+    padding: 10px;
+    color: var(--clr1);
+}
+
+nav a.active {
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+a.logout:hover {
+    text-decoration: none;
+}
+
+/* buttons */
+.button {
+    border: none;
+    background: var(--btn);
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s ease-in-out;
+
+}
+
+.button:hover {
+    opacity: 0.95;
+    /* transform: translateY(-1px); */
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); */
+}
+
+
+.button-add {
+    background: var(--btn-add);
+
+}
+
+.button-show {
+    background: var(--btn-show)
+}
+
+.button-edit {
+    background: var(--btn-edit);
+
+}
+
+.button-remove {
+    background: var(--btn-remove)
+}
+
+.button-save {
+    background: var(--btn-save);
+}
+
+
+button.button-icon {
+    padding: 3px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    height: fit-content;
+    width: fit-content;
+    transition: all 0.2s ease-in-out;
+}
+
+button.button-icon:hover {
+    transform: scale(1.05);
+}
+
+.button-icon-like {
+    background: pink;
+}
+
+.button-icon-add {
+    background: var(--btn-add);
+}
+
+.button-icon-show {
+    background: var(--btn-show)
+}
+
+.button-icon-edit {
+    background: var(--btn-edit);
+}
+
+.button-icon-remove {
+    background: var(--btn-remove)
+}
+
+.button-icon-save {
+    background: var(--btn-save);
+}
+
+.button-icon:hover {
+    opacity: .5;
+}
+
+ion-icon {
+    font-size: 25px;
+    color: white;
+}
+
+ion-icon.black-icon {
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+}
+
+/* search select */
+#select_search.select-search-active {
+    border-radius: 5px 5px 0 0;
+}
+
+ul.dropdown {
+    border: .25px solid lightgray;
+    list-style: none;
+    width: 100%;
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
+}
+
+ul.dropdown li {
+    padding: 3px;
+    background: white;
+}
+
+ul.dropdown li:not:first-child {
+    border-top: .5px solid lightgray;
+}
+
+ul.dropdown li:hover {
+    background: gainsboro;
+    cursor: pointer;
+}
+
+
+ul.dropdown li.unchoosed {
+    color: grey;
+}
+
+ul.dropdown li.unchoosed:hover {
+    cursor: default;
+    background: white;
+}
+
+
+/* forms */
+
+form {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
+}
+
+main form {
+    width: 60%;
+    justify-self: center;
+}
+
+.form-control {
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+form input,
+form select,
+form textarea {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: inherit;
+}
+
+input,
+select,
+textarea {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+label {
+
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+legend {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    align-self: center;
+}
+
+.not-valid {
+    border: red solid 1px;
+    color: red;
+    /* background-color: #ffe4e2; */
+}
+
+.valid-message {
+    color: red;
+    /* font-weight: bold; */
+    font-size: 8;
+}
+
+/* form {
+    margin: 20px auto;
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #756158;
+    border-radius: 5px;
+    background-color: #f9e3d0;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+form input,
+form select,
+form textarea {
+    width: auto;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #756158;
+    border-radius: 4px;
+    box-sizing: border-box;
+} */
+
+
+
+/* other */
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.j-c-end {
+    justify-content: end;
+}
+
+.j-c-start {
+    justify-content: start;
+}
+
+.j-c-center {
+    justify-content: center;
+}
+
+.j-c-b {
+    justify-content: space-between;
+}
+
+.j-c-a {
+    justify-content: space-around;
+}
+
+.j-c-e {
+    justify-content: space-evenly;
+}
+
+.hidden {
+    display: none;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.w-half {
+    width: 50%;
+    max-width: 50%;
+}
+
+.item-center {
+    align-items: center;
+    align-content: center;
+}
+
+.mt-10 {
+    margin-top: 2px;
+}
+
+.mt-3 {
+    margin-top: 3px;
+}
+
+/* .deleting > *,
+    .deleting ion-icon, */
+.deleting *,
+.deleting {
+    font-size: 0;
+    padding: 0 !important;
+    margin: 0;
+    border-width: 0;
+    color: transparent;
+    background: transparent;
+}
+
+.not-link {
+    color:var(--text);
+    text-decoration: none;
+}
+
+.overflow-hide {
+    white-space: nowrap;
+    overflow: hidden;
+    word-wrap: unset;
+}
+
+.line {
+    margin: 20px 0;
+    border-top: 2px solid var(--brd);
+    width: 100%;
+}
+
+ion-icon.classic {
+    color: var(--text);
+}
+
+ul li {
+    color: var(--text);
+}
+.ml-20{
+margin-left: 20px;
+}
+
+/* text */
+h1 {
+    text-align: center;
+    color: var(--text);
+    margin-top: 40px;
+    font-family: sans-serif;
+    /* font-style: italic; */
+}
+
+.unbold {
+    font-weight: 100;
+}
+
+.text-center {
+    text-align: center;
+}
+
+#info_about_time,
+#ingredient_list {
+    font-size: large;
+    color: grey;
+    /* font-weight: lighter; */
+}
+
+#ingredient_list {
+    margin-left: 20px;
+    list-style: ' - ';
+}
+
+/* calendar */
+
+#calendar {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+#calendar #header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+
+
+}
+
+#calendar #header h2 {
+    font-size: 25px;
+    margin: 0 100px;
+    transition: .5s;
+}
+
+#calendar #header h3 {
+    color: var(--text);
+    font-size: 20px;
+    transition: .2s;
+}
+
+#calendar #header h3:hover {
+    color: rgb(53, 46, 42);
+    cursor: pointer;
+}
+
+#calendar #days_of_week {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+
+}
+
+#calendar #days_of_week .day-of-week {}
+
+#calendar #body {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 14.3% 14.3% 14.3% 14.3% 14.3% 14.3% 14.3%;
+
+}
+
+#calendar #body .day-cell {
+    background: whitesmoke;
+    border-radius: 5px;
+    border: lightgray 1px solid;
+    margin: 3px;
+    padding: 3px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info {
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+
+.info .date {}
+
+.info .icons {}
+
+.info .icons ion-icon {
+    color: var(--text-white);
+    font-size: 25px;
+    transition: .2s;
+}
+
+.info .icons ion-icon:hover {
+    color: var(--text);
+    cursor: pointer;
+}
+
+ion-icon.green {
+    color: green;
+}
+
+.menu {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+#calendar #body .day-cell.empty {
+    border: none;
+    background-color: var(--brd)
+}
+
+#calendar #body .day-cell.current {
+    border: var(--brd) 2px solid;
+}
+
+/* main page */
+
+#dayinfo {
+    min-height: 250px;
+    width: 100%;
+    height: 100%;
+}
+
+#dayinfo h3 {
+    font-size: 30px;
+}
+
+#dayinfo #main {
+    height: 100%;
+    margin: 15px 5px;
+    display: grid;
+    grid-template-columns: 40% 35% 25%;
+    gap: 15px;
+}
+
+#dayinfo #main p {
+    width: -webkit-fill-available;
+    align-self: anchor-center;
+    font-style: italic;
+    text-align: center;
+}
+
+#dayinfo table {
+    border-collapse: collapse;
+}
+
+#dayinfo table th,
+#dayinfo table td {
+    border: 1px solid var(--brd);
+    background-color: white;
+    text-align: center;
+}
+
+#dayinfo #weigth_and_training {
+    font-size: 20px
+}
+
+#dayinfo #weigth {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+#dayinfo #trainings {}
+
+/* workouts */
+
+#workouts_list {
+    list-style: none;
+}
+
+#workouts_list li {
+    font-size: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-left: 4px solid #eb8787;
+    padding: 5px;
+    margin: 15px;
+    background: #ffffff75;
+    transition: font-size 500ms ease-in-out, padding 500ms ease-in-out;
+}
+
+/* products table */
+
+#products table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#products table td,
+#products table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+#products table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#products table tr:hover {
+    background-color: #bc8f8f75;
+}
+
+#products table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: rosybrown;
+    color: white;
+    text-align: center;
+}
+
+#products table td.icons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+
+
+/* recipes list of cards */
+
+#recipes_grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 50% 50%;
+}
+
+.recipe-card {
+    /* border: .5px solid gray; */
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    padding: 10px;
+    border-radius: 10px;
+    height: 350px;
+    background: whitesmoke;
+    transition: font-size 500ms ease-in-out, padding 500ms ease-in-out;
+}
+
+.recipe-card h5 {
+    font-size: 18px;
+}
+
+.recipe-card ul {
+    margin-left: 20px;
+    list-style: ' – ';
+}
+
+.recipe-card button {
+    margin-top: 0;
+}
+
+
+#recipe_show {
+    padding: 10px;
+
+}
+
+#recipe_show h3 {
+    font-size: 30px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+
+}
+
+#recipe_show h4 {
+    font-size: 26px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+
+}
+
+#recipe_show p,
+#recipe_show b,
+#recipe_show ul li,
+#recipe_show i {
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+#recipe_show i {
+    font-weight: 100;
+}
+
+/* setting */
+
+#settings .list {
+    line-height: 1.5;
+}
+
+/* pagination */
+.pagination {
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+    border-radius: 5px;
+    background-color: white;
+}
+
+.pagination a.active {
+    background-color: #756158;
+    color: white;
+    border: 1px solid #756158;
+    cursor: default;
+}
+
+.pagination a.disabled,
+.pagination a.disabled:hover {
+    color: white;
+    border: 1px solid lightgray;
+    color: lightgray;
+    cursor: default;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: var(--clr3);
+    border-color: #75615825;
+    color: #756158
+}
+
+.charts-grid {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    gap: 10px;
+}
+
+/*  */
+/* 
+
+table {
+    border-spacing: 0;
+}
+
+th,
+td {
+    text-align: left;
+    border-bottom: 1px solid black;
+    padding: 10px 0;
+}
+
+.cena {
+    text-align: right;
+    padding-left: 50px;
+}
+
+
+section {
+    padding: 50px 15%;
+    overflow: auto;
+}
+
+
+.header {
+    padding: 80px 30px;
+    background-image: url(img/dan-gold-4_jhDO54BYg-unsplash.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+#profile_link {
+    display: inline-block;
+    color: #6e5642;
+    text-decoration: none;
+    font-size: 20px;
+    margin-left: 10px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#profile_link a {
+    text-decoration: none;
+    font-style: normal;
+
+}
+
+#profile_link a:hover {
+    color: #33261b;
+    text-decoration: underline;
+}
+
+
+
+#modal_add_meal_choosed_order_charts {
+    display: grid;
+    gap: 5px;
+    grid-template-columns: auto auto auto;
+
+}
+
+#modal_add_meal_choosed_order_description ul {
+    list-style: " - ";
+
+}
+
+#liked_meal_or_product {
+    height: 25px;
+    width: 25px;
+}
