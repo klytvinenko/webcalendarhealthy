@@ -2,6 +2,7 @@
 
 use App\Data;
 use App\Models\User;
+use App\Services\MealService;
 
 require_once 'Resources/views/modals/add_meal.php';
 require_once 'Resources/views/modals/add_training.php';
@@ -62,11 +63,12 @@ require_once 'Resources/views/modals/generate_menu.php';
                             ?>
 
                             <tr>
-                                <?= $is_first_row ? '<td rowspan="' . count($meals_breakfast) . '">Сніданок</td>' : '' ?>
+                                <?= $is_first_row ? '<td rowspan="' . count($meals_breakfast) . '" title="'.MealService::calcProcent($meal->time).' ккал"><b>Сніданок</b></td>' : '' ?>
 
                                 <td><?= $meal->title ?></td>
                                 <td><?= $meal->weight ?> г</td>
                                 <td><?= $meal->kcal ?></td>
+                                <td class="td-delete-icon" onclick="href('/profile/meals/delete?id=<?= $meal->id ?>')"><ion-icon name="close-outline"></ion-icon></td>
                             </tr>
 
 
@@ -85,11 +87,12 @@ require_once 'Resources/views/modals/generate_menu.php';
                             ?>
 
                             <tr>
-                                <?= $is_first_row ? '<td rowspan="' . count($meals_snack1) . '">Перекус 1</td>' : '' ?>
+                                <?= $is_first_row ? '<td rowspan="' . count($meals_snack1) . '" title="'.MealService::calcProcent($meal->time).' ккал"><b>Перекус 1</b></td>' : '' ?>
 
                                 <td><?= $meal->title ?></td>
                                 <td><?= $meal->weight ?> г</td>
                                 <td><?= $meal->kcal ?></td>
+                                <td class="td-delete-icon" onclick="href('/profile/meals/delete?id=<?= $meal->id ?>')"><ion-icon name="close-outline"></ion-icon></td>
                             </tr>
 
 
@@ -108,11 +111,12 @@ require_once 'Resources/views/modals/generate_menu.php';
                             ?>
 
                             <tr>
-                                <?= $is_first_row ? '<td rowspan="' . count($meals_lunch) . '">Обід</td>' : '' ?>
+                                <?= $is_first_row ? '<td rowspan="' . count($meals_lunch) . '" title="'.MealService::calcProcent('lunch').' ккал"><b>Обід</b></td>' : '' ?>
 
                                 <td><?= $meal->title ?></td>
                                 <td><?= $meal->weight ?> г</td>
                                 <td><?= $meal->kcal ?></td>
+                                <td class="td-delete-icon" onclick="href('/profile/meals/delete?id=<?= $meal->id ?>')"><ion-icon name="close-outline"></ion-icon></td>
                             </tr>
 
 
@@ -131,11 +135,12 @@ require_once 'Resources/views/modals/generate_menu.php';
                             ?>
 
                             <tr>
-                                <?= $is_first_row ? '<td rowspan="' . count($meals_snack2) . '">Перекус 2</td>' : '' ?>
+                                <?= $is_first_row ? '<td rowspan="' . count($meals_snack2) . '" title="'.MealService::calcProcent('snack2').' ккал"><b>Перекус 2</b></td>' : '' ?>
 
                                 <td><?= $meal->title ?></td>
                                 <td><?= $meal->weight ?> г</td>
                                 <td><?= $meal->kcal ?></td>
+                                <td class="td-delete-icon" onclick="href('/profile/meals/delete?id=<?= $meal->id ?>')"><ion-icon name="close-outline"></ion-icon></td>
                             </tr>
 
 
@@ -154,11 +159,12 @@ require_once 'Resources/views/modals/generate_menu.php';
                             ?>
 
                             <tr>
-                                <?= $is_first_row ? '<td rowspan="' . count($meals_dinner) . '">Вечеря</td>' : '' ?>
+                                <?= $is_first_row ? '<td rowspan="' . count($meals_dinner) . '" title="'.MealService::calcProcent('dinner').' ккал"><b>Вечеря</b></td>' : '' ?>
 
                                 <td><?= $meal->title ?></td>
                                 <td><?= $meal->weight ?> г</td>
                                 <td><?= $meal->kcal ?></td>
+                                <td class="td-delete-icon" onclick="href('/profile/meals/delete?id=<?= $meal->id ?>')"><ion-icon name="close-outline"></ion-icon></td>
                             </tr>
 
 
@@ -167,15 +173,15 @@ require_once 'Resources/views/modals/generate_menu.php';
                         }
                         ?>
                         <tr>
-                            <td rowspan="2">Всього</td>
-                            <td><b>Ккал:</b> <?= $menu['sums'][5]['kcal'] ?> ккал</td>
-                            <td><b>Білок:</b> <?= $menu['sums'][5]['protein'] ?> г</td>
-                            <td><b>Жири:</b> <?= $menu['sums'][5]['fat'] ?> г</td>
+                            <td rowspan="2"><b>Всього</b></td>
+                            <td><b>Ккал:</b><br> <?= $menu['sums'][5]['kcal'] ?> ккал</td>
+                            <td><b>Білок:</b><br> <?= $menu['sums'][5]['protein'] ?> г</td>
+                            <td><b>Жири:</b><br> <?= $menu['sums'][5]['fat'] ?> г</td>
                         </tr>
                         <tr>
-                            <td><b>Вуглеводи:</b> <?= $menu['sums'][5]['carbonation'] ?> г</td>
-                            <td><b>Натрій:</b> <?= $menu['sums'][5]['na'] ?> мг</td>
-                            <td><b>Клітковина:</b> <?= $menu['sums'][5]['cellulose'] ?> мг</td>
+                            <td><b>Вуглеводи:</b><br> <?= $menu['sums'][5]['carbonation'] ?> г</td>
+                            <td><b>Натрій:</b><br> <?= $menu['sums'][5]['na'] ?> мг</td>
+                            <td><b>Клітковина:</b><br> <?= $menu['sums'][5]['cellulose'] ?> мг</td>
                         </tr>
                     </tbody>
                 </table>
@@ -195,8 +201,10 @@ require_once 'Resources/views/modals/generate_menu.php';
                 } else {
                     foreach ($trainings as $training) {
                         ?>
-                        <li><?= $training['title'] ?> (<?= $training['times'][0] ?> - <?= $training['times'][1] ?>) -
-                            <?= $training['kcal'] ?> ккал
+                        <li id="workout_<?= $training['id'] ?>" class="row j-c-start"><p><?= $training['title'] ?> (<?= $training['times'][0] ?> -
+                            <?= $training['times'][1] ?>) -
+                            <?= $training['kcal'] ?> ккал </p><span
+                                onclick="Delete('/profile/workoutsuser/delete?id=<?= $training['id'] ?>','workout_<?= $training['id'] ?>')"><ion-icon name="close-outline"></ion-icon></span>
                         </li>
                         <?php
 
@@ -382,18 +390,16 @@ require_once 'Resources/views/modals/generate_menu.php';
     //test
     DrawChart();
     function DrawChart() {
-        let data = JSON.parse('<?= json_encode($menu['sums'][5]) ?>');
+        let data = JSON.parse('<?= json_encode($norms) ?>');
         let user_norm_for_chart = JSON.parse('<?= json_encode($user->norms) ?>');
-        console.log("norms ", user_norm_for_chart);
-        console.log("data ", data);
         var options = {
             series: [
                 (data.protein * user_norm_for_chart.protein) / 100,
                 (data.fat * user_norm_for_chart.fat) / 100,
                 (data.carbonation * user_norm_for_chart.carbonation) / 100,
                 (data.na / 1000 * user_norm_for_chart.na) / 100,
-                (data.callulose * user_norm_for_chart.callulose) / 100,],
-            colors: ['#ef476f', '#ffd166', '#06d6a0', '#118ab2', '#073b4c'],
+                (data.cellulose * user_norm_for_chart.cellulose) / 100,],
+            colors: ['#ef476f', '#ffc640', '#06d6a0', '#118ab2', '#073b4c'],
             chart: {
                 height: 350,
                 type: 'radialBar',
@@ -441,11 +447,13 @@ require_once 'Resources/views/modals/generate_menu.php';
 
     async function updateTrainings() {
         let new_list = await Workout.today();
-        let html="";
-        new_list.forEach((training)=>{
-            html+='<li>'+training.title+' ('+training.times[0]+' - '+training.times[1]+') - '+training.kcal+' ккал</li>'
+        let html = "";
+        new_list.forEach((training) => {
+            // html += '<li id="workout_' + training.id + '">' + training.title + ' (' + training.times[0] + ' - '+ training.times[1] + ') - ' + training.kcal + ' ккал <span onclick="Delete(\'/profile/workoutsuser/delete?id=' + training.id + '\',\'workout_' + training.id + '\')"></span></li>'
+            html += '<li id="workout_' + $training['id']+ '" class="row j-c-start"><p>' + $training['title'] + ' (' + $training['times'][0]  + ' - '+ $training['times'][1] + ') - ' + $training['kcal'] + ' ккал <span onclick="Delete(\'/profile/workoutsuser/delete?id=' + training.id + '\',\'workout_' + training.id + '\')"><ion-icon name="close-outline"></ion-icon></li>';
+        
         });
-        today_info_block.trainings.innerHTML=html;
+        today_info_block.trainings.innerHTML = html;
     }
 
     async function updateMenuTable() {
@@ -526,7 +534,6 @@ require_once 'Resources/views/modals/generate_menu.php';
         }
         else {
             let norms = JSON.parse('<?= json_encode($user_norms) ?>');
-            console.log(norms.norms);
             let full_data = choosed_prouct_or_recipe.full_data;
             // Оголошуємо norms тут
 
@@ -582,29 +589,35 @@ require_once 'Resources/views/modals/generate_menu.php';
             PrintCharts(norm_by_time, norms.norms, full_data);
         }
     }
+    function GenerateMenuAlert() {
+        let have_10_liked_recipes = <?= $have_10_liked_recipes??false; ?>;
+        if (have_10_liked_recipes==false) {
+            alert('Щоб згенерувати меню з улюблених рецептів і продуктів, потрібно додати в улюблені рецепти мінімум 10 значень!');
+        } 
+    }
+    let charts = {}; // замість масиву
+    document.addEventListener("DOMContentLoaded", function (event) {
+        InizialiseChart('modal_add_meal_chart1', 'Ккал', '#073b4c');
+        InizialiseChart('modal_add_meal_chart2', 'Білок', '#ef476f');
+        InizialiseChart('modal_add_meal_chart3', 'Жири', '#ffd166');
+        InizialiseChart('modal_add_meal_chart4', 'Вуглеводи', '#06d6a0');
+        InizialiseChart('modal_add_meal_chart5', 'Натрій', '#118ab2');
+        InizialiseChart('modal_add_meal_chart6', 'Клітковина', '#118ab2');
+    });
     function PrintCharts(norms_procent, all_norms, data) {
-        console.log("norms_procent", norms_procent);
-        console.log("all_norms", all_norms);
-        console.log("data", data);
-        if (data == null) {
-            PrintChart('modal_add_meal_chart1', 0, 'Ккал', '#073b4c');
-            PrintChart('modal_add_meal_chart2', 0, 'Білок', '#ef476f');
-            PrintChart('modal_add_meal_chart3', 0, 'Жири', '#ffd166');
-            PrintChart('modal_add_meal_chart4', 0, 'Вуглеводи', '#06d6a0');
-            PrintChart('modal_add_meal_chart5', 0, 'Натрій', '#118ab2');
-            PrintChart('modal_add_meal_chart6', 0, 'Клітковина', '#118ab2');
-        }
-        else {
-            console.log("(" + norms_procent.avg + "*" + all_norms.kcal + ")/100");
+        if (data != null) {
+            let npavg = norms_procent.avg;
             let norms_new = {
-
-                kcal: (norms_procent.avg * all_norms.kcal) / 100,
-                protein: (norms_procent.avg * all_norms.protein) / 100,
-                fat: (norms_procent.avg * all_norms.fat) / 100,
+                kcal: (npavg * all_norms.kcal) / 100,
+                protein: (npavg * all_norms.protein) / 100,
+                fat: (npavg * all_norms.fat) / 100,
                 carbonation: (norms_procent.avg * all_norms.carbonation) / 100,
-                na: (norms_procent.avg * all_norms.na) / 100,
-                cellulose: (norms_procent.avg * all_norms.cellulose) / 100,
+                na: (npavg * all_norms.na) / 100,
+                cellulose: (npavg * all_norms.cellulose) / 100,
             };
+            console.log('npavg', npavg);
+            console.log('all_norms', all_norms);
+            console.log('norms_new', norms_new);
             let procents = {
                 kcal: Math.round((data.kcal * 100) / norms_new.kcal),
                 protein: Math.round((data.protein * 100) / norms_new.protein),
@@ -612,24 +625,21 @@ require_once 'Resources/views/modals/generate_menu.php';
                 carbonation: Math.round((data.carbonation * 100) / norms_new.carbonation),
                 na: Math.round((data.na * 100) / norms_new.na),
                 cellulose: Math.round((data.cellulose * 100) / norms_new.cellulose),
-
             };
-            console.log("(" + data.kcal + "*" + 100 + ")/" + norms_new.kcal);
-            PrintChart('modal_add_meal_chart1', procents.kcal, 'Ккал \r\n (' + data.kcal + ')', '#073b4c');
-            PrintChart('modal_add_meal_chart2', procents.protein, 'Білок\r\n (' + data.protein + ')', '#ef476f');
-            PrintChart('modal_add_meal_chart3', procents.fat, 'Жири\r\n (' + data.fat + ')', '#ffd166');
-            PrintChart('modal_add_meal_chart4', procents.carbonation, 'Вуглеводи\r\n (' + data.carbonation + ')', '#06d6a0');
-            PrintChart('modal_add_meal_chart5', procents.na, 'Натрій\r\n (' + data.na + ')', '#118ab2');
-            PrintChart('modal_add_meal_chart6', procents.cellulose, 'Клітковина\r\n (' + data.cellulose + ')', '#118ab2');
+            console.log('procents', procents);
+            UpdateChart(charts['modal_add_meal_chart1'], procents.kcal, 'Ккал \r\n (' + data.kcal + ')', '#073b4c');
+            UpdateChart(charts['modal_add_meal_chart2'], procents.protein, 'Білок\r\n (' + data.protein + ')', '#ef476f');
+            UpdateChart(charts['modal_add_meal_chart3'], procents.fat, 'Жири\r\n (' + data.fat + ')', '#ffd166');
+            UpdateChart(charts['modal_add_meal_chart4'], procents.carbonation, 'Вуглеводи\r\n (' + data.carbonation + ')', '#06d6a0');
+            UpdateChart(charts['modal_add_meal_chart5'], procents.na, 'Натрій\r\n (' + data.na + ')', '#118ab2');
+            UpdateChart(charts['modal_add_meal_chart6'], procents.cellulose, 'Клітковина\r\n (' + data.cellulose + ')', '#118ab2');
+        } else {
+            console.error("Дані відсутні");
         }
-
-
     }
-    function PrintChart(chart_id, procent = 70, label = "", color = "Green") {
-        if (procent > 100) color = "Red";
-
+    function InizialiseChart(chart_id, label = "", color) {
         var options = {
-            series: [procent],
+            series: [0],
             chart: {
                 height: 150,
                 width: 150,
@@ -645,13 +655,28 @@ require_once 'Resources/views/modals/generate_menu.php';
             colors: [color],
             labels: [label],
         };
+        let element = document.querySelector("#" + chart_id);
+        if (element) {
+            charts[chart_id] = new ApexCharts(element, options);
+            charts[chart_id].render();
+        } else {
+            console.error("Елемент з id '" + chart_id + "' не знайдено!");
+        }
+    }
 
-
-        var chart = new ApexCharts(document.querySelector("#" + chart_id), options);
-        chart.render();
-
-
-
+    function UpdateChart(chart, procent = 70, label = "", color) {
+        if (!chart) {
+            console.error("Графік не знайдено!");
+            return;
+        }
+        if (procent > 100) color = "Red";
+        else if (procent >= 80) color = "#06d6a0";
+        procent = procent > 100 ? procent : procent;
+        chart.updateOptions({
+            colors: [color],
+            labels: [label],
+            series: [procent],
+        });
     }
     function ChooseWeigth(e) {
         choosed_prouct_or_recipe.weight = e.value;
@@ -662,19 +687,19 @@ require_once 'Resources/views/modals/generate_menu.php';
         let html_for_info = "";
         switch (choosed_prouct_or_recipe.time) {
             case 'breakfast':
-                html_for_info += "<i>Прийом їжі сніданок має включати 25% від загальної норми ккал</i>";
+                html_for_info += "<i>   Прийом їжі сніданок має включати 25% від загальної норми ккал</i>";
                 break;
             case 'snack1':
-                html_for_info += "<i>Прийом їжі ранковий перекус має включати 5-10% від загальної норми ккал</i>"
+                html_for_info += "<i>   Прийом їжі ранковий перекус має включати 5-10% від загальної норми ккал</i>"
                 break;
             case 'lunch':
-                html_for_info += "<i>Прийом їжі обід має включати 40-45% від загальної норми ккал</i>"
+                html_for_info += "<i>   Прийом їжі обід має включати 40-45% від загальної норми ккал</i>"
                 break;
             case 'snack2':
-                html_for_info += "<i>Прийом їжі після обідній перекус має включати 10-15% від загальної норми ккал</i>"
+                html_for_info += "<i>   Прийом їжі після обідній перекус має включати 10-15% від загальної норми ккал</i>"
                 break;
             case 'dinner':
-                html_for_info += "<i>Прийом їжі вечеря має включати 15-20% від загальної норми ккал</i>"
+                html_for_info += "<i>   Прийом їжі вечеря має включати 15-20% від загальної норми ккал</i>"
                 break;
         }
 
@@ -720,7 +745,7 @@ require_once 'Resources/views/modals/generate_menu.php';
             console.log('kcal on 1 hour', kcal_on_1_hour);
             console.log('min', minutes);
             let kcal = Math.round((kcal_on_1_hour / 60) * minutes);
-            calc_kcal.value = kcal+" ккал";
+            calc_kcal.value = kcal + " ккал";
         }
     }
     function diff_minutes(dt2, dt1) {

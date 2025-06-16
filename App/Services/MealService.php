@@ -50,7 +50,14 @@ class MealService
             'data' => $data,
         ];
     }
+    public static function calcProcent($time)
+    {
+        $norms=UserService::norms();
+        $procent=$norms[$time]['avg'];
+        $norm=$norms['norms']['kcal'];
+        return round(($procent*$norm)/100);
 
+    }
 
 
 

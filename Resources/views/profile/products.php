@@ -58,9 +58,6 @@
                             <button class="button-icon button-icon-edit"
                                 onclick="href('/profile/products/edit?id=<?= $product['id'] ?>')" title="Редагувати"><ion-icon
                                     name="create-outline"></ion-icon></button>
-                            <button class="button-icon button-icon-remove"
-                                onclick="Delete('/profile/products/delete?id=<?= $product['id'] ?>','product_<?= $product['id'] ?>')"><ion-icon
-                                    name="close-circle-outline" title="Видалити"></ion-icon></button>
                         </td>
 
                     </tr>

@@ -10,13 +10,13 @@
             use App\Build;
 
             echo '<div class="row">';
-            echo Build::FormControlInput('favorite_dishes', 'Улюблені страви', 'checkbox', '');
+            echo Build::FormControlInput('favorite_dishes', 'Улюблені страви', 'checkbox', 'onchange="GenerateMenuAlert()"');
             echo Build::FormControlInput('no_sweets','без солодощів', 'checkbox', '');
             echo '</div><div class="row">';
             echo Build::FormControlInput('no_bakery','без мучного', 'checkbox', '');
             // echo Build::FormControlInput('no_soups','без супів', 'checkbox', '');!
             echo '</div>';
-            echo Build::Button();
+            echo Build::Button("Генерувати");
             ?>
 
         </form>

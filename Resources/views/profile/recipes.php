@@ -1,6 +1,6 @@
 <section>
     <div class="row j-c-end w-full">
-        <button class="button" onclick="href('/profile/recipes/add')">Додати</button>
+        <button class="button button-add" onclick="href('/profile/recipes/add')">Додати</button>
     </div>
     <?php
     use App\Build;
@@ -38,9 +38,6 @@
                             <button class="button-icon button-icon-edit"
                                 onclick="href('/profile/recipes/edit?id=<?= $recipe->id ?>')" title="Редагувати"><ion-icon
                                     name="create-outline"></ion-icon></button>
-                            <button class="button-icon button-icon-remove"
-                                onclick="Delete('/profile/recipes/delete?id=<?= $recipe->id ?>','recipe_<?= $recipe->id ?>')"><ion-icon
-                                    name="close-circle-outline" title="Видалити"></ion-icon></button>
                         </div>
                     </div>
                     <p><i><?= $recipe->type->getName() ?></i></p>
@@ -48,6 +45,7 @@
                             title="Жири"><?= $recipe->fat ?> г</span>/<span title="Вуглеводи"><?= $recipe->carbonation; ?>
                             г</span>)
                     </p>
+                    <p><b>Вага:</b> <?= $recipe->weight ?> г</p>
                     <p><b>Дієти:</b> <?= !empty($recipe->diets) ? implode(', ', $recipe->diets) : ' - ' ?></p>
                     <p><b>Алергени:</b><?= !empty($recipe->allergies) ? implode(', ', $recipe->allergies) : ' - ' ?> </p>
                     <p><b>Інгредієнти:</b>

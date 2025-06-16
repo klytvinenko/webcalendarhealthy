@@ -9,7 +9,7 @@
     </div>
 
         <?php
-        echo Build::FormControlеTextarea('description', 'Опис / Інструкція', "", $workout->description);
+        echo Build::FormControlTextarea('description', 'Опис / Інструкція', "", $workout->description);
         echo Build::Button("Зберегти");
         ?>
         

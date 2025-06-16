@@ -77,6 +77,8 @@ $router->get('/profile/products', [ProductController::class, "index"], UserType:
 
 $router->get('/profile/recipes/show', [RecipeController::class, "show"], UserType::LOGINED);
 $router->get('/profile/products/show', [ProductController::class, "show"], UserType::LOGINED);
+$router->get('/profile/workouts/show', [WorkoutController::class, "show"], UserType::LOGINED);
+
 
 $router->get('/profile/recipes/add', [RecipeController::class, "add"], UserType::LOGINED);
 $router->get('/profile/workouts/add', [WorkoutController::class, "add"], UserType::LOGINED);
@@ -107,13 +109,14 @@ $router->delete('/profile/workouts/delete', [WorkoutController::class, "deletewo
 $router->delete('/profile/workouts_user/delete', [WorkoutController::class, "deleteworkoutuser"], UserType::LOGINED);//was not tested
 $router->delete('/profile/recipes/delete', [RecipeController::class, "deleterecipe"], UserType::LOGINED);//was not tested
 $router->delete('/profile/products/delete', [ProductController::class, "deleteproduct"], UserType::LOGINED);//was not tested
-$router->delete('/profile/meals/delete', [MealController::class, "deletemeal"], UserType::LOGINED);//was not tested
+$router->get('/profile/meals/delete', [MealController::class, "deletemeal"], UserType::LOGINED);//was not tested
+$router->delete('/profile/workoutsuser/delete', [WorkoutController::class, "deleteworkoutuser"], UserType::LOGINED);
 
 // for calendar
 
 $router->post('/profile/meals/generate', [MealController::class, "generatemenu"], UserType::LOGINED);
-$router->post('/profile/workouts/store', [WorkoutController::class, "storeworkout"], UserType::LOGINED);
-$router->post('/profile/weights/store', [WeightController::class, "storeweigth"], UserType::LOGINED);
+$router->post('/profile/calendar/workouts/store', [WorkoutController::class, "storeworkoutfromcalendar"], UserType::LOGINED);
+$router->post('/profile/calendar/weights/store', [WeightController::class, "storeweigthfromcalendar"], UserType::LOGINED);
 
 
 

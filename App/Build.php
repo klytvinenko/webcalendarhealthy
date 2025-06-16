@@ -27,7 +27,7 @@ class Build
         unset($_SESSION['not_valid']);
         unset($_SESSION['old_values']);
     }
-    static function FormControlSelect($name, $label, string $attrs, array $array,string $firstOption = "Оберіть...")
+    static function FormControlSelect($name, $label, string $attrs, array $array, string $firstOption = "Оберіть...")
     {
         $old_value = isset($_SESSION['old_values'][$name]) ? 'value="' . $_SESSION['old_values'][$name] . '"' : null;
         $options = '';
@@ -74,7 +74,7 @@ class Build
         }
 
     }
-    static function FormControlеTextarea($name, $label, string $attrs, $value = "")
+    static function FormControlTextarea($name, $label, string $attrs, $value = "")
     {
         return '<div class="form-control">
             <label for="' . $name . '">' . $label . '</label>
@@ -84,35 +84,95 @@ class Build
     }
     static function Pagination($item_on_page, $table, $link)
     {
-        //TODO не показувати більше кнопок, ящко значень для всіх сторінок забагато
+        $res = '';
         $page = $_GET['page'] ?? 1;
-        $products_length = $_SESSION['tables_lengths'][$table] ?? 0;
-        if ($products_length == 0) {
-            $products_length = DB::selectByQuery('SELECT count(id) as count_ FROM products;')[0]['count_'];
-            $_SESSION['tables_lengths'][$table] = $products_length;
-        }
-        $last_page = round($products_length / $item_on_page) - 1;
-        // unset($_SESSION['tables_lengths'][$table]);
+        // unset($_SESSION['tables_lengths']);
+        $items_length = DB::selectByQuery('SELECT count(id) as count_ FROM '.$table.';')[0]['count_'];
+        // if ($items_length == 0) {
+        //     $items_length = DB::selectByQuery('SELECT count(id) as count_ FROM '.$table.';')[0]['count_'];
+        //     $_SESSION['tables_lengths'][$table] = $items_length;
+        // }
+        $last_page = round($items_length / $item_on_page) ;
+        $last_page = ($items_length % $item_on_page)!=0?$last_page:$last_page-1;
         $link .= '?page=';
         $n = $page;
+        if ($last_page >= 5) {
+            if ($n == 1 || $n == 2)
+                $pages = [1, 2, 3, 4, 5];
+            else if ($n == $last_page)
+                $pages = [$n - 4, $n - 3, $n - 2, $n - 1, $n];
+            else if ($n == ($last_page - 1))
+                $pages = [$n - 3, $n - 2, $n - 1, $n, $n + 1];
+            else {
+                $pages = [$n - 2, $n - 1, $n, $n + 1, $n + 2];
+            }
 
-        if ($n == 1 || $n == 2)
-            $pages = [1, 2, 3, 4, 5];
-        else if ($n == $last_page)
-            $pages = [$n - 4, $n - 3, $n - 2, $n - 1, $n];
-        else if ($n == ($last_page - 1))
-            $pages = [$n - 3, $n - 2, $n - 1, $n, $n + 1];
-        else {
-            $pages = [$n - 2, $n - 1, $n, $n + 1, $n + 2];
-        }
+            $links = [
+                $link . '1',
+                $link . $pages[0],
+                $link . $pages[1],
+                $link . $pages[2],
+                $link . $pages[3],
+                $link . $pages[4],
+                $link . $last_page
+            ];
+
+            $classes = [
+                $page == 1 ? 'disabled' : '',
+                $page == 1 ? 'active' : '',
+                $page == 2 ? 'active' : '',
+                $pages == [$n - 2, $n - 1, $n, $n + 1, $n + 2] ? 'active' : '',
+                $page == ($last_page - 1) ? 'active' : '',
+                $page == $last_page ? 'active' : '',
+                $page == $last_page ? 'disabled' : ''
+            ];
+
+            $central_links = '';
+            for ($i = 0; $i < 5; $i++) {
+                $central_links .= '<a href="' . $links[$i + 1] . '" class="' . $classes[$i + 1] . '">' . $pages[$i] . '</a>';
+            }
+
+            $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[6] . '" class="' . $classes[6] . '">&raquo;</a></div></div>';
+
+        } else if ($last_page == 4) {
+            $pages = [1, 2, 3,4];
+        
+
+            $links = [
+                $link . '1',
+                $link . $pages[0],
+                $link . $pages[1],
+                $link . $pages[2],
+                $link . $pages[3],
+                $link . $last_page
+            ];
+    
+            $classes = [
+                $page == 1 ? 'disabled' : '',
+                $page == 1 ? 'active' : '',
+                $page == 2 ? 'active' : '',
+                $page == 3 ? 'active' : '',
+                $page == 4 ? 'active' : '',
+                $page == $last_page ? 'disabled' : ''
+            ];
+    
+            $central_links = '';
+            for ($i = 0; $i < 4; $i++) {
+                $central_links .= '<a href="' . $links[$i + 1] . '" class="' . $classes[$i + 1] . '">' . $pages[$i] . '</a>';
+            }
+    
+            $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[5] . '" class="' . $classes[5] . '">&raquo;</a></div></div>';
+    
+        } else if ($last_page == 3) {
+            
+            $pages = [1, 2, 3];
+        
 
         $links = [
             $link . '1',
             $link . $pages[0],
             $link . $pages[1],
             $link . $pages[2],
-            $link . $pages[3],
-            $link . $pages[4],
             $link . $last_page
         ];
 
@@ -120,23 +180,69 @@ class Build
             $page == 1 ? 'disabled' : '',
             $page == 1 ? 'active' : '',
             $page == 2 ? 'active' : '',
-            $pages == [$n - 2, $n - 1, $n, $n + 1, $n + 2] ? 'active' : '',
-            $page == ($last_page - 1) ? 'active' : '',
-            $page == $last_page ? 'active' : '',
+            $page == 3 ? 'active' : '',
             $page == $last_page ? 'disabled' : ''
         ];
 
         $central_links = '';
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 3; $i++) {
             $central_links .= '<a href="' . $links[$i + 1] . '" class="' . $classes[$i + 1] . '">' . $pages[$i] . '</a>';
         }
 
-        $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[6] . '" class="' . $classes[6] . '">&raquo;</a></div></div>';
+        $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[4] . '" class="' . $classes[4] . '">&raquo;</a></div></div>';
+
+        } else if ($last_page == 2) {
+                $pages = [1, 2];
+
+            $links = [
+                $link . '1',
+                $link . $pages[0],
+                $link . $pages[1],
+                $link . $last_page
+            ];
+
+            $classes = [
+                $page == 1 ? 'disabled' : '',
+                $page == 1 ? 'active' : '',
+                $page == 2 ? 'active' : '',
+                $page == $last_page ? 'disabled' : ''
+            ];
+
+            $central_links = '';
+            for ($i = 0; $i < 2; $i++) {
+                $central_links .= '<a href="' . $links[$i + 1] . '" class="' . $classes[$i + 1] . '">' . $pages[$i] . '</a>';
+            }
+
+            $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[3] . '" class="' . $classes[3] . '">&raquo;</a></div></div>';
+
+        } else if ($last_page == 1) {
+                $pages = [1];
+
+            $links = [
+                $link . '1',
+                $link . $pages[0],
+                $link . $last_page
+            ];
+
+            $classes = [
+                $page == 1 ? 'disabled' : '',
+                $page == 1 ? 'active' : '',
+                $page == $last_page ? 'disabled' : ''
+            ];
+
+            $central_links = '<a href="' . $links[1] . '" class="' . $classes[1] . '">' . $pages[0] . '</a>';
+            
+
+            $res = '<div class="text-center w-full"><div class="pagination"><a href="' . $links[0] . '" class="' . $classes[0] . '">&laquo;</a>' . $central_links . '<a href="' . $links[2] . '" class="' . $classes[2] . '">&raquo;</a></div></div>';
+
+        }
+
 
         return $res;
 
 
     }
+
     static function List($array, bool $is_number, $id_name = "")
     {
         $res = "";
@@ -149,13 +255,13 @@ class Build
         $tag = $is_number ? "ol" : "ul";
         return "<$tag>" . $res . "</$tag>";
     }
-    public static function Button($title="Зберегти"): string
+    public static function Button($title = "Зберегти"): string
     {
-        return '<div class="row j-c-end w-full"><button class="button button-save" type="submit">'.$title.'</button></div>';
+        return '<div class="row j-c-end w-full"><button class="button button-save" type="submit">' . $title . '</button></div>';
     }
-    public static function ButtonAPI($afterFunction="")
+    public static function ButtonAPI($afterFunction = "")
     {
-        return '<div class="row j-c-end w-full"><button class="button button-save" type="button" onclick="Ajax.Post(this,'.$afterFunction.')">Зберегти</button></div>';
+        return '<div class="row j-c-end w-full"><button class="button button-save" type="button" onclick="Ajax.Post(this,' . $afterFunction . ')">Зберегти</button></div>';
     }
 
 }

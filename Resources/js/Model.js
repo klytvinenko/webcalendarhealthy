@@ -70,9 +70,9 @@ class Model {
         }
     }
 
-    static async delete(table, id, folder = "model") {
+    static async delete(table, id) {
         try {
-            const response = await fetch("../ajax/" + folder + "/delete.php?table=" + table + "&id=" + id, {
+            const response = await fetch("/api/" + folder + "/delete?id=" + id, {
                 method: "DELETE",
             });
 
@@ -182,6 +182,9 @@ class Recipe extends Model {
 class Weigth extends Model {
     static get() {
         return API.get('/api/weight/get');
+    }
+    static getByDate(date) {
+        return API.get('/api/weight/get?date='+date);
     }
     static WeightsProgressForWeek() {
         return API.get('/api/weight/progress');

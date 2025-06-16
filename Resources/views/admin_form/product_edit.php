@@ -1,4 +1,4 @@
-<form id="form_add_product" action="/profile/products/update?id=<?= $product->id ?>" method="post">
+<form id="form_add_product" action="/admin/products/update?id=<?= $product->id ?>" method="post">
     <div class="row">
         <?php
         use App\Build;

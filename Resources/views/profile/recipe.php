@@ -1,5 +1,10 @@
 <h1><?= $recipe->title ?> (<i><?= $recipe->type->getName() ?></i>)</h1>
 <div class="center">
+    <p><i><?= $recipe->description ?></i></p>
+    <div class="line"></div>
+    <p><b>Дієти:</b> <?= !empty($recipe->diets) ? implode(', ', $recipe->diets) : ' - ' ?></p>
+    <p><b>Алергени:</b><?= !empty($recipe->allergies) ? implode(', ', $recipe->allergies) : ' - ' ?> </p>
+    <div class="line"></div>
     <p><b>Ккалорії: </b><?= $recipe->kcal ?> ккал</p>
     <p><b>Жири: </b><?= $recipe->fat ?> г</p>
     <p><b>Білки: </b><?= $recipe->protein ?> г</p>
@@ -21,13 +26,7 @@
 
     } else
         echo ' - ';
-
     ?>
     </ul></p>
-    <div class="line"></div>
-    <p><b>Дієти:</b> <?= !empty($recipe->diets) ? implode(', ', $recipe->diets) : ' - ' ?></p>
-    <p><b>Алергени:</b><?= !empty($recipe->allergies) ? implode(', ', $recipe->allergies) : ' - ' ?> </p>
-    <div class="line"></div>
-    <p><i><?= $recipe->description ?></i></p>
 
 </div>

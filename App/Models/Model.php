@@ -12,14 +12,16 @@ abstract class Model
         if(is_null(static::$table)) echo "table is null";
         else return DB::select(static::$table);
     }
-    public static function pagination($values)
+    public static function pagination($values,bool $is_admin=false)
     {
         if(is_null(static::$table)) echo "table is null";
         else {
-            $offset=$_GET['page']??0;
+            $offset=isset($_GET['page'])?$_GET['page']-1:0;
             $offset=$offset*$values;
-            $data=DB::selectByQuery("SELECT * FROM ".static::$table." LIMIT ".$values." OFFSET ".$offset.";");
-            return $data;
+            if($is_admin) return DB::selectByQuery("SELECT * FROM ".static::$table." LIMIT ".$values." OFFSET ".$offset.";");
+            $res1= DB::selectByQuery("SELECT * FROM ".static::$table." WHERE user_id IS NULL LIMIT ".$values." OFFSET ".$offset.";");
+            $res2=DB::selectByQuery("SELECT * FROM ".static::$table." WHERE user_id=".User::id()." LIMIT ".$values." OFFSET ".$offset.";");
+            return array_merge($res1,$res2);
         }
     }
     public static function where(string $conditions,$order=null,$limit=null)

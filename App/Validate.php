@@ -218,6 +218,10 @@ class Validate
     {
         return self::storeproductbyadmin($request);
     }
+    public static function updateproduct($request)
+    {
+        return self::storeproduct($request);
+    }
     public static function updateworkoutbyadmin($request)
     {
         return self::storeworkoutbyadmin($request);
@@ -283,6 +287,18 @@ class Validate
         return $is_valid;
     }
     public static function updaterecipe($request)
+    {
+        $is_valid = true;
+        return $is_valid;
+    }
+    
+    public static function APIstoreweightfromcalendar($request)
+    {
+        $is_valid = true;
+        return $is_valid;
+    }
+    
+    public static function APIstoreworkoutfromcalendar($request)
     {
         $is_valid = true;
         return $is_valid;

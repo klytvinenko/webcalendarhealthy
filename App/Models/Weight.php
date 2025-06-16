@@ -13,41 +13,45 @@ class Weight extends Model
     public int $value;
     public int $user_id;
     public string $date_of_update;
-    public string $time;
     public function __construct(array|int $data)
     {
+
         if (is_int($data)) {
             $data = Weight::find($data);
         }
-        if (isset($data['id'])) {
-            $this->id = $data["id"];
-            $this->value = $data['weigth'];
-            $this->user_id = $data['user_id'];
-            $this->date_of_update = date('Y-m-d', strtotime($data['date_of_update']));
-            $this->time = date('H:m', strtotime($data['date_of_update']));
-        }
-
+        $this->id = $data["id"];
+        $this->value = $data['weigth'];
+        $this->user_id = $data['user_id'];
+        $this->date_of_update = $data['date_of_update'];
     }
+
+
     public static function getWeight($date = null)
     {
-        if (is_null($date))
+        if (is_null($date)) {
             $date = Data::today();
-        $current_weight = DB::selectByQuery('SELECT * FROM weigths WHERE date_of_update="' . $date . '" AND user_id=' . User::id() . ';');
-        if (!empty($current_weight)||count($current_weight)==0)
+        }
+        $current_weight = DB::selectOne('weigths', 'id', "date_of_update='$date' AND user_id=" . User::id() . ";");
+        
+        if (empty($current_weight))
             return null;
-        return new Weight($current_weight[0]);
+        $current_weight_id=$current_weight['id'];
+        $res = new Weight($current_weight_id);
+        return $res;
     }
     public static function setWeight($weight, $date_of_update = null)
     {
-        $date_of_update = $date_of_update ?? Data::today();
+        $date_of_update = !is_null($date_of_update) ?$date_of_update : Data::today();
+        echo $date_of_update;
+
         //check if exist
-        $exists = Weight::where("user_id=" . User::id() . " AND date_of_update='" . $date_of_update . '"');
+        $exists = Weight::where("user_id=" . User::id() . " AND date_of_update='$date_of_update'");
         if (empty($exists)) {
 
             $res = DB::insert('weigths', [
                 'user_id' => User::id(),
                 'weigth' => $weight,
-                'date_of_update' => Data::today(),
+                'date_of_update' => $date_of_update,
             ]);
             return $res;
         } else {
@@ -60,10 +64,6 @@ class Weight extends Model
 
 
     }
-    public static function getWeightProgress()
-    {
-        $res = DB::selectByQuery('SELECT w.weigth as weigth, max(w.date_of_update) as date_of_update FROM weigths as w WHERE w.user_id=' . User::id() . ' GROUP BY w.date_of_update ORDER BY w.date_of_update;');
-        return $res;
-    }
+
 
 }

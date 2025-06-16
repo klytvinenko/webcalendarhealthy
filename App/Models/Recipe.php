@@ -81,6 +81,12 @@ class Recipe extends Model
             $this->na += Data::calcProcent($ingredient['weight'], $ingredient['na']);
             $this->cellulose += Data::calcProcent($ingredient['weight'], $ingredient['cellulose']);
         }
+        $this->kcal = round($this->kcal);
+        $this->fat = round($this->fat);
+        $this->protein = round($this->protein);
+        $this->carbonation = round($this->carbonation);
+        $this->na = round($this->na);
+        $this->cellulose = round($this->cellulose);
         $this->diets = $this->diets();
         $this->allergies = $this->allergies();
 

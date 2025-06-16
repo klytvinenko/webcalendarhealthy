@@ -87,18 +87,18 @@ class UserController extends Controller
             'cellulose' => 0,
         ];
         if ($menu['sums'][5]['kcal'] != 0) {
-            $new_kcal = $menu['sums'][5]['kcal'] + $trainings['kcal'];
+            $new_kcal = $menu['sums'][5]['kcal'] - $trainings['kcal'];
             $coef = (($new_kcal * 100) / $menu['sums'][5]['kcal']) / 100;
             $norms = [
                 'kcal' => $new_kcal,
-                'protein' => $norms['protein'] * $coef,
-                'fat' => $norms['fat'] * $coef,
-                'carbonation' => $norms['carbonation'] * $coef,
-                'na' => $norms['na'] * $coef,
-                'cellulose' => $norms['cellulose'] * $coef,
+                'protein' => $menu['sums'][5]['protein'] * $coef,
+                'fat' => $menu['sums'][5]['fat'] * $coef,
+                'carbonation' => $menu['sums'][5]['carbonation'] * $coef,
+                'na' => $menu['sums'][5]['na'] * $coef,
+                'cellulose' => $menu['sums'][5]['cellulose'] * $coef,
             ];
         }
-        
+        $have_10_liked_recipes=UserService::have10LikedRecipes();
         self::render('Головна', 'profile/index', 'main', [
             'user' => $user,
             'date' => date("d") . ' (' . Data::$week_days_ua[date("w")] . ') ' . Data::$months_ua[date("m")] . ' ' . date("Y"),
@@ -108,13 +108,15 @@ class UserController extends Controller
             'norms' => $norms,
             'workoutsTypes' => Workout::all(),
             'mealtimes'=>Data::$mealtimes,
-            'user_norms'=>UserService::norms()
+            'user_norms'=>UserService::norms(),
+            'have_10_liked_recipes'=>$have_10_liked_recipes?'true':'false',
 
         ]);
     }
     public function setting()
     {
         $user = new User(User::id());
+        $user->update_age();
         self::render('Налаштування', 'profile/setting', 'main', [
             'user' => $user,
         ]);

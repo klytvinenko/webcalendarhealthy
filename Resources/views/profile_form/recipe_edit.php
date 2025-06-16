@@ -11,7 +11,7 @@
     <div class="row">
         <?php
         echo Build::FormControlSelect('diets[]', 'Дієти', 'multiple', $diets);
-        echo Build::FormControlеTextarea('description', 'Опис', ' cols="30" rows="4"', $recipe->description);
+        echo Build::FormControlTextarea('description', 'Опис', ' cols="30" rows="4"', $recipe->description);
         ?>
     </div>
     <!-- Інгрідієнти -->

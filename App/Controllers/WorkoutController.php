@@ -14,14 +14,27 @@ class WorkoutController extends Controller
     public function index()
     {
         $item_on_page = 10;
-        $workouts = Workout::pagination($item_on_page);
+        $user_id=User::id();
+        // $workouts = Workout::pagination($item_on_page);
+        $workouts=DB::selectByQuery("SELECT * FROM workouts WHERE user_id IS NULL OR user_id=$user_id;");
+        // array_merge($workouts,$workouts2);
         self::render('Тренування', 'profile/workouts', 'main', [
             'user' => new User(User::id()),
             'workouts' => $workouts,
             'item_on_page' => $item_on_page
         ]);
     }
-
+    public function show($params)
+    {
+        $id = $params['id'];
+        $workout = new Workout($id);
+        //find
+        $workout_number= DB::selectByQuery('SELECT COUNT(id) as count FROM workouts_user WHERE workout_id='.$id)[0]['count'];
+        self::render('Перегляд тренування', 'profile/workout', 'main', [
+            'workout' => $workout,
+            'workout_number'=>$workout_number
+        ]);
+    }
     public function indexbyadmin()
     {
 
@@ -62,6 +75,7 @@ class WorkoutController extends Controller
             "title" => $request['title'],
             "description" => $request['description'],
             "kcal" => $request['kcal'],
+            "user_id"=>User::id()
         ]);
         Router::redirect('/profile/workouts');
     }
@@ -140,6 +154,22 @@ class WorkoutController extends Controller
         // Router::redirect('/admin/workouts');
     }
 
+    public function deleteworkoutuser($id)
+    {
+        try {
+            $res=DB::delete('workouts_user', "id=" . $id);
+            echo json_encode([
+                'status' => 1,
+                'message' => $res,
+            ]);
+        } catch (\Exception $e) {
+            echo json_encode([
+                'status' => 0,
+                'message' => $e->getMessage(),
+            ]);
+        }
+        // Router::redirect('/profile/workouts');
+    }
     public function deleteworkout($id)
     {
         DB::delete('workouts_user', "workout_id=" . $id);

@@ -14,7 +14,7 @@
         <?php
         use App\Models\Diet;
         echo Build::FormControlSelect('diets[]', 'Дієти', 'multiple', Diet::all());
-        echo Build::FormControlеTextarea('description', 'Опис', ' cols="30" rows="4"');
+        echo Build::FormControlTextarea('description', 'Опис', ' cols="30" rows="4"');
         ?>
     </div>
     <!-- Інгрідієнти -->
@@ -122,6 +122,6 @@
 
     }
     function DeleteIngredient(e) {
-        e.parentElement().parentElement().remove();
+        e.parentElement.remove();
     }
 </script>

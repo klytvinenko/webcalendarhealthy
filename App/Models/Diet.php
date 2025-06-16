@@ -16,7 +16,7 @@ class Diet extends Model
         
         $this->id=$data['id'];
         $this->name=$data['name'];
-        $this->description=$data['description'];
+        $this->description=$data['description']??'';
     }
     public  function recipes(){
 

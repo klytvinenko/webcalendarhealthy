@@ -29,10 +29,10 @@ class RecipeController extends Controller
         $item_on_page=12;
         $recipes = Recipe::pagination($item_on_page);
         $recipes=RecipeService::fullData($recipes);
-        self::render('Рецепти', 'admin/recipes', 'admin', [
-            'recipes'=>$recipes,
-            'item_on_page'=>$item_on_page,
-        ]);
+        // self::render('Рецепти', 'admin/recipes', 'admin', [
+        //     'recipes'=>$recipes,
+        //     'item_on_page'=>$item_on_page,
+        // ]);
     }
     
     public function show($params)

@@ -11,7 +11,7 @@
     <div class="row">
 
         <?php
-        echo Build::FormControlеTextarea('description', 'Опис / Інструкція', "", $workout->description);
+        echo Build::FormControlTextarea('description', 'Опис / Інструкція', "", $workout->description);
         ?>
     </div>
 

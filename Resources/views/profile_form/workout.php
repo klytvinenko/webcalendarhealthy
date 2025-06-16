@@ -11,7 +11,7 @@
 
         <?php
 
-        echo Build::FormControlеTextarea('description', 'Опис / Інструкція', '');
+        echo Build::FormControlTextarea('description', 'Опис / Інструкція', '');
         ?>
     </div>
 

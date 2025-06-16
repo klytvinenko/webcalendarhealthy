@@ -81,8 +81,9 @@ class User extends Model
         return $_SESSION['user']['id'];
     }
 
-    public function calcNorms($weight)
+    public function calcNorms($weight,$date=null)
     {
+        $date=is_null($date)?Data::today():$date;
         $kcal = 0;
         if ($this->sex == 'woman') {
             $kcal = $weight * 10 + $this->height * 6.25 - $this->age * 5 - 161;
@@ -106,7 +107,7 @@ class User extends Model
             'date_of_birth' => $this->date_of_birth,
             'activity_level' => $this->activity_level,
         ]);
-        Weight::setWeight($weight);
+        Weight::setWeight($weight,$date);
     }
 
 }

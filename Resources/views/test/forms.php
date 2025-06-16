@@ -82,7 +82,7 @@ use App\Build;
 
     <legend>Додавання дієти</legend>
     <?= Build::FormControlInput('name', 'Імя', 'text', 'required'); ?>
-    <?= Build::FormControlеTextarea('description', 'Опис', 'required'); ?>
+    <?= Build::FormControlTextarea('description', 'Опис', 'required'); ?>
     <button type="submit" class="btn-primary">Зберегти</button>
 
 </form>
@@ -92,7 +92,7 @@ use App\Build;
 
     <legend>Додавання алергени</legend>
     <?= Build::FormControlInput('name', 'Імя', 'text', 'required'); ?>
-    <?= Build::FormControlеTextarea('description', 'Опис', 'required'); ?>
+    <?= Build::FormControlTextarea('description', 'Опис', 'required'); ?>
     <button type="submit" class="btn-primary">Зберегти</button>
 </form>
 

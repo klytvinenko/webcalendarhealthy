@@ -5,7 +5,7 @@
     use App\Build;
     use App\Data;
     echo Build::FormControlInput('title', 'Назва', 'text', 'required value="' . $diet->name . '"');
-    echo Build::FormControlеTextarea('description', 'Опис','',  $diet->description);
+    echo Build::FormControlTextarea('description', 'Опис','',  $diet->description);
     ?>
 
     <div class="row j-c-end w-full">

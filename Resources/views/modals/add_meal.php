@@ -28,10 +28,10 @@
                     <div id="modal_add_meal_chart5"></div>
                     <div id="modal_add_meal_chart6"></div>
                 </div>
-                <div id="" class="w-half column" style="margin:10px;">
+                <div id="" class="w-half column j-c-a" style="margin:10px;">
                     <p id="info_about_time"></p>
-                    <!-- <p id="info_about_diets"></p>
-                    <p id="info_about_allergies"></p> -->
+                    <p id="info_about_diets"></p>
+                    <p id="info_about_allergies"></p>
                     <ul id="ingredient_list"></ul>
                 </div>
             </div>

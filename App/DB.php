@@ -88,7 +88,7 @@ class DB
     static function selectByQuery(string $query,bool $getQuery = false)
     {
         if($getQuery){
-            return $query;
+            echo $query;
         }
         $db = DB::connect();
         try {

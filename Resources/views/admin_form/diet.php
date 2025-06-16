@@ -4,7 +4,7 @@
     <?php
     use App\Build;
     echo Build::FormControlInput('title', 'Назва', 'text', 'required');
-    echo Build::FormControlеTextarea('description', 'Опис', '');
+    echo Build::FormControlTextarea('description', 'Опис', '');
     ?>
 
     <div class="row j-c-end w-full">

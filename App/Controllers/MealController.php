@@ -21,7 +21,8 @@ class MealController extends Controller
 
     public function calendar($params)
     {
-
+        $user=new User();
+        $user->update_age();
         $month = $params['m'] ?? date('m');
         $year = $params['y'] ?? date('Y');
         $days_in_month = date("t", mktime(0, 0, 0, $month, 1, $year));
@@ -51,7 +52,7 @@ class MealController extends Controller
             ]);
         }
         for ($i = 1; $i <= $days_in_month; $i++) {
-            $d=$i>9?$i:'0'.$i;
+            $d = $i > 9 ? $i : '0' . $i;
             $menu = MealService::bydate($year . '-' . $month . '-' . $d);
             // $trainings=TrainingService::bydate($year.'-'.$month.'-'.$i);
 
@@ -128,12 +129,17 @@ class MealController extends Controller
     public function APIstoremealtoday($request)
     {
         try {
+            $recipe_weight=null;
+            if(!is_null($request['recipe_id'])){
+                $recipe=Recipe::find($request['recipe_id']);
+                $recipe_weight=MenuGenerateService::$static_weigth[$recipe['type']];
+            }
             $res = Meal::create([
                 "user_id" => User::id(),
                 "recipe_id" => $request['recipe_id'],
                 "product_id" => $request['product_id'],
-                "weigth" => $request['weigth'],
-                "date" => Data::today(),
+                "weigth" => $recipe_weight??$request['weigth'],
+                "date" => $request['date']??Data::today(),
                 "time" => $request['time'],
             ]);
             echo json_encode([
@@ -153,16 +159,16 @@ class MealController extends Controller
         $date_start = $request['date_start'] ?? null;
         $date_end = $request['date_end'] ?? null;
         $dates = [];
-        if (is_null($date_start)||is_null($date_end)) {
+        if (is_null($date_start) || is_null($date_end)) {
             $dates = [Data::today()];
             $from_main_page = true;
         } else {
-            $current_date=$date_start;
-            while ($current_date!=$date_end) {
-                array_push($dates,$current_date);
-                $current_date=date('Y-m-d', strtotime('+1 day', strtotime($current_date)));
+            $current_date = $date_start;
+            while ($current_date != $date_end) {
+                array_push($dates, $current_date);
+                $current_date = date('Y-m-d', strtotime('+1 day', strtotime($current_date)));
             }
-            array_push($dates,$date_end);
+            array_push($dates, $date_end);
         }
         //generate menu
         $generate_menu = new MenuGenerateService();
@@ -170,7 +176,7 @@ class MealController extends Controller
 
         // //CLEAR menu
         DB::delete('meals', 'date IN ("' . implode('", "', $dates) . '") AND user_id=' . User::id());
-        $res=$generate_menu->saveToDB();
+        $res = $generate_menu->saveToDB();
         // Data::dd($res);
 
         if ($from_main_page)
@@ -181,14 +187,22 @@ class MealController extends Controller
 
     public function APIsearch($param)
     {
-        //TODO 5 recipes and 5 products
-        // filter by diets and allergies, prioritets on liked,
+        //TODO  prioritets on liked,
         try {
             $search = urldecode($param['search']);
+            $user = new User();
+
+            $allergies_ids = implode(',', $user->allergiesIds());
+            $diets_ids = implode(',', $user->dietsIds());
+
+            $query_for_diets_in_products = empty($diets_ids) ? '' : 'AND id IN (SELECT pid.product_id FROM product_in_diets as pid WHERE pid.diet_id IN (' . $diets_ids . '))';
+            $query_for_allergies_in_products = empty($allergies_ids) ? '' : 'AND id NOT IN (SELECT aop.product_id FROM allergies_on_products as aop where aop.allergy_id IN (' . $allergies_ids . '))';
+            $query_for_diets_in_recipes = empty($diets_ids) ? '' : 'AND id IN (SELECT rid.recipe_id FROM recipe_in_diets as rid WHERE rid.diet_id IN (' . $diets_ids . '))';
+            $query_for_allergies_in_recipes = empty($allergies_ids) ? '' : 'AND id NOT IN (SELECT pir.recipe_id FROM products_in_recipes as pir WHERE pir.product_id IN (SELECT aop.product_id FROM allergies_on_products as aop where aop.allergy_id IN (' . $allergies_ids . ')))';
             //search recipes
-            $recipes = DB::selectByQuery("SELECT * FROM recipes WHERE title LIKE '%$search%' ORDER BY title LIMIT 5;");
+            $recipes = DB::selectByQuery("SELECT * FROM recipes WHERE title LIKE '%$search%' $query_for_diets_in_recipes $query_for_allergies_in_recipes ORDER BY title LIMIT 5;");
             //search products
-            $products = DB::selectByQuery("SELECT * FROM products WHERE title LIKE '%$search%' ORDER BY title LIMIT 5;");
+            $products = DB::selectByQuery("SELECT * FROM products WHERE title LIKE '%$search%' $query_for_diets_in_products $query_for_allergies_in_products ORDER BY title LIMIT 5;");
             $searched = [];
             foreach ($recipes as $recipe) {
                 $recipe_full = new Recipe($recipe);
@@ -236,5 +250,10 @@ class MealController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+    public function deletemeal($params){
+        $id=$params['id'];
+        Meal::delete("id=" . $id);
+        Router::redirect('/profile');
     }
 }

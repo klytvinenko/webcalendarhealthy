@@ -11,6 +11,7 @@ class UserService
 {
     public static function norms()
     {
+        $user=new User();
         return [
             "norms"=>[
                 "kcal"=>$user->norms['kcal']??0,
@@ -47,5 +48,9 @@ class UserService
             ]
 
         ];
+    }
+    public static function have10LikedRecipes(){
+        $liked_recipes=DB::select('liked_recipes','*','user_id='.user::id(),'id','10');
+        return count($liked_recipes)>=10;
     }
 }

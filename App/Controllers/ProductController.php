@@ -14,8 +14,9 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $item_on_page = 15;
+        $item_on_page = 10;
         $products = Product::pagination($item_on_page);
+        
         for ($i = 0; $i < count($products); $i++) {
             $products[$i]['is_liked'] = ProductService::isLiked($products[$i]['id']);
         }
@@ -27,10 +28,14 @@ class ProductController extends Controller
     }
     public function indexbyadmin()
     {
-        $item_on_page = 15;
-        $products = Product::pagination($item_on_page);
+        $item_on_page = 10;
+        $products = Product::pagination($item_on_page,true);
+        $products_res=[];
+        foreach ($products as $product) {
+            $products_res[]=new Product($product['id']);
+        }
         self::render('Продукти', 'admin/products', 'admin', [
-            'products' => $products,
+            'products' => $products_res,
             'item_on_page' => $item_on_page
         ]);
     }
@@ -54,7 +59,6 @@ class ProductController extends Controller
     public function search($params)
     {
         $search_text = urldecode($params['text']);
-
         $data = DB::selectByQuery("SELECT id,title FROM products WHERE title LIKE '{$search_text}%' LIMIT 10;");
         echo json_encode([
             'status' => 1,
@@ -123,145 +127,33 @@ class ProductController extends Controller
             'product' => $product,
             'diets' => $diets,
             'allergies' => $allergies,
-
         ]);
     }
 
     public function storeproduct($request)
     {
-        Product::create([
-            "title" => $request['title'],
-            "type" => isset($request['is_can_be_meal']) ? ($request['is_can_be_meal'] == "on" ? 'product' : 'ingredient') : 'ingredient',
-            "kcal" => $request['kcal'],
-            "fat" => $request['fat'],
-            "protein" => $request['protein'],
-            "carbonation" => $request['carbonation'],
-            "na" => $request['na'],
-            "cellulose" => $request['cellulose'],
-        ]);
-        $product_id = DB::lastInsertId('products');
-        if (isset($request['allergies'])) {
-            foreach ($request['allergies'] as $allergy_id) {
-                DB::insert('allergies_on_products', [
-                    'product_id' => $product_id,
-                    'allergy_id' => $allergy_id
-                ]);
-            }
-        }
-        if (isset($request['diets'])) {
-            foreach ($request['diets'] as $diet_id) {
-                DB::insert('product_in_diets', [
-                    'product_id' => $product_id,
-                    'diet_id' => $diet_id
-                ]);
-            }
-        }
+        ProductService::create($request);
         Router::redirect('/profile/products');
     }
+
     public function storeproductbyadmin($request)
     {
-        Product::create([
-            "title" => $request['title'],
-            "type" => isset($request['is_can_be_meal']) ? ($request['is_can_be_meal'] == "on" ? 'product' : 'ingredient') : 'ingredient',
-            "kcal" => $request['kcal'],
-            "fat" => $request['fat'],
-            "protein" => $request['protein'],
-            "carbonation" => $request['carbonation'],
-            "na" => $request['na'],
-            "cellulose" => $request['cellulose'],
-        ]);
-        $product_id = DB::lastInsertId('products');
-        if (isset($request['allergies'])) {
-            foreach ($request['allergies'] as $allergy_id) {
-                DB::insert('allergies_on_products', [
-                    'product_id' => $product_id,
-                    'allergy_id' => $allergy_id
-                ]);
-            }
-        }
-        if (isset($request['diets'])) {
-            foreach ($request['diets'] as $diet_id) {
-                DB::insert('product_in_diets', [
-                    'product_id' => $product_id,
-                    'diet_id' => $diet_id
-                ]);
-            }
-        }
+        ProductService::create($request,true);
         Router::redirect('/admin/products');
     }
     
     public function updateproduct($params, $request)
     {
-        $id = $params['id'];
-        Product::update('id=' . $id, [
-            "title" => $request['title'],
-            "type" => isset($request['is_can_be_meal']) ? ($request['is_can_be_meal'] == "on" ? 'product' : 'ingredient') : 'ingredient',
-            "kcal" => $request['kcal'],
-            "fat" => $request['fat'],
-            "protein" => $request['protein'],
-            "carbonation" => $request['carbonation'],
-            "na" => $request['na'],
-            "cellulose" => $request['cellulose'],
-        ]);
-
-        DB::delete('allergies_on_products', 'product_id=' . $id);
-        DB::delete('product_in_diets', 'product_id=' . $id);
-
-        if (isset($request['allergies'])) {
-            foreach ($request['allergies'] as $allergy_id) {
-                DB::insert('allergies_on_products', [
-                    'product_id' => $id,
-                    'allergy_id' => $allergy_id
-                ]);
-            }
-        }
-        if (isset($request['diets'])) {
-
-            foreach ($request['diets'] as $diet_id) {
-                DB::insert('product_in_diets', [
-                    'product_id' => $id,
-                    'diet_id' => $diet_id
-                ]);
-            }
-        }
+        ProductService::create($request);
         Router::redirect('/profile/products');
     }
+
     public function updateproductbyadmin($params, $request)
     {
-        $id = $params['id'];
-        Product::update('id=' . $id, [
-            "title" => $request['title'],
-            "type" => isset($request['is_can_be_meal']) ? ($request['is_can_be_meal'] == "on" ? 'product' : 'ingredient') : 'ingredient',
-            "kcal" => $request['kcal'],
-            "fat" => $request['fat'],
-            "protein" => $request['protein'],
-            "carbonation" => $request['carbonation'],
-            "na" => $request['na'],
-            "cellulose" => $request['cellulose'],
-        ]);
-
-        DB::delete('allergies_on_products', 'product_id=' . $id);
-        DB::delete('product_in_diets', 'product_id=' . $id);
-
-        if (isset($request['allergies'])) {
-            foreach ($request['allergies'] as $allergy_id) {
-                DB::insert('allergies_on_products', [
-                    'product_id' => $id,
-                    'allergy_id' => $allergy_id
-                ]);
-            }
-        }
-        if (isset($request['diets'])) {
-
-            foreach ($request['diets'] as $diet_id) {
-                DB::insert('product_in_diets', [
-                    'product_id' => $id,
-                    'diet_id' => $diet_id
-                ]);
-            }
-        }
+        ProductService::update($params['id'],$request);
         Router::redirect('/admin/products');
     }
+
     public function like($params)
     {
         $product_id = $params['id'];
@@ -279,24 +171,14 @@ class ProductController extends Controller
         }
         Router::redirect('/profile/products');
     }
+
     public function deleteproductbyadmin($id)
     {
-        DB::delete('meals', condition: "product_id=" . $id);
-        DB::delete('products_in_recipes', condition: "product_id=" . $id);
-        DB::delete('product_in_diets', condition: "product_id=" . $id);
-        DB::delete('allergies_on_products', condition: "product_id=" . $id);
-        DB::delete('liked_products', condition: "product_id=" . $id);
-        Product::delete("id=" . $id);
-        // Router::redirect('/admin/products');
+        ProductService::delete($id);
     }
+
     public function deleteproduct($id)
     {
-        DB::delete('meals', condition: "product_id=" . $id);
-        DB::delete('products_in_recipes', condition: "product_id=" . $id);
-        DB::delete('product_in_diets', condition: "product_id=" . $id);
-        DB::delete('allergies_on_products', condition: "product_id=" . $id);
-        DB::delete('liked_products', condition: "product_id=" . $id);
-        Product::delete("id=" . $id);
-        // Router::redirect('/profile/products');
+        ProductService::delete($id);
     }
 }

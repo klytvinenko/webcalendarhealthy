@@ -126,6 +126,10 @@ class MenuGenerateService
         ];
         return $need_fill;
     }
+    public function isFilled(string $date, $time)
+    {
+        $this->res_data[$date][$time]['filled'] = $this->res_data[$date][$time]['nutrients']['kcal'] >= (MealService::calcProcent($time) - 50);
+    }
     public function generateForDay(string $date)
     {
         $this->res_data[$date] = [
@@ -216,6 +220,9 @@ class MenuGenerateService
             $this->createSnack($date, $time);
         }
         $this->calcNutrients($date);
+        foreach (self::$times as $time) {
+            $this->isFilled($date, $time);
+        }
         //check id enough
         $is_have_norm = false;
         if ($this->res_data[$date]['nutrients']['kcal'] > ($this->user->norms['kcal'] * 0.95))
@@ -230,8 +237,10 @@ class MenuGenerateService
         //add if need
         if (!$is_have_norm) {
             foreach (self::$times as $time) {
-                if (!$this->res_data[$date][$time]['filled'])
+                if (!$this->res_data[$date][$time]['filled']) {
                     $this->fillMealTimeToEnd($date, $time);
+                    $this->calcNutrients($date);
+                }
             }
         }
     }
@@ -271,64 +280,85 @@ class MenuGenerateService
             array_push($variants, 1);
         if (!empty($this->desserts) && !$this->no_sweets)
             array_push($variants, 2);
-        if (!empty($this->others))
-            array_push($variants, 3);
+        // if (!empty($this->others))
+        //     array_push($variants, 3);
 
         $this->generateMeal($need_fill, $this->drinks, $date, $time, 'drink');
-        
-        $variant = $this->randItemInArray($variants);
-        if ($variant == 0) {
-            $this->generateMeal($need_fill, $this->products, $date, $time, 'product');
-        } else if ($variant == 1) {
-            $this->generateMeal($need_fill, $this->bakeries, $date, $time, 'bakery');
-        } else if ($variant == 2) {
-            $this->generateMeal($need_fill, $this->desserts, $date, $time, 'dessert');
-        } else if ($variant == 3) {
-            $this->generateMeal($need_fill, $this->others, $date, $time, 'other');
+
+        $this->isFilled($date, $time);
+        if (!$this->res_data[$date][$time]['filled']) {
+            $variant = $this->randItemInArray($variants);
+            if ($variant == 0) {
+                $this->generateMeal($need_fill, $this->products, $date, $time, 'product');
+            } else if ($variant == 1) {
+                $this->generateMeal($need_fill, $this->bakeries, $date, $time, 'bakery');
+            } else if ($variant == 2) {
+                $this->generateMeal($need_fill, $this->desserts, $date, $time, 'dessert');
+            } else if ($variant == 3) {
+                $this->generateMeal($need_fill, $this->others, $date, $time, 'other');
+            }
         }
+    }
+    public function findType($date, $time, $finded_type)
+    {
+        return in_array($finded_type, array_column($this->res_data[$date][$time]['meals'], 'type'));
     }
     public function fillMealTimeToEnd($date, $time)
     {
-        // if (in_array($time, ['breakfast', 'lunch', 'dinner']))
-        //     $need_fill = $this->getFillNeed($date, $time);
-        // $this->generateMeal($this->drinks, $date, $time, 'drink');
+        $need_fill = $this->getFillNeed($date, $time);
+        if (in_array($time, ['breakfast', 'lunch', 'dinner'])) {
+            $this->generateMeal($need_fill, $this->drinks, $date, $time, 'drink');
+        }
+        $this->isFilled($date, $time);
+        if (!$this->res_data[$date][$time]['filled']) {
+            $need_fill = $this->getFillNeed($date, $time);
+
+            if ($need_fill['procent'] <= 50 && in_array($time, ['breakfast', 'lunch', 'dinner'])) {
+                $have_soup = $this->findType($date, $time, 'soup');
+                $variants = [];
+                if (!empty($this->maindishes) && $have_soup)
+                    array_push($variants, 0);
+                if (!empty($this->soups) && !$have_soup)
+                    array_push($variants, 1);
+                if ((!empty($this->garnirs) || !empty($this->meats) || !empty($this->salads)) && $have_soup)
+                    array_push($variants, 2);
+
+                $variant = $this->randItemInArray($variants);
+                if ($variant == 0) {
+                    $this->generateMeal($need_fill, $this->maindishes, $date, $time, 'maindish');
+
+                } else if ($variant == 1) {
+                    $this->generateMeal($need_fill, $this->soups, $date, $time, 'soup');
+
+                } else if ($variant == 2) {
+                    $this->generateMeal($need_fill, $this->garnirs, $date, $time, 'garnir');
+                    $this->generateMeal($need_fill, $this->meats, $date, $time, 'meat');
+                    $this->generateMeal($need_fill, $this->salads, $date, $time, 'salad');
+                }
+            } else {
+                $variants = [];
+                if (!empty($this->products))
+                    array_push($variants, 0);
+                if (!empty($this->bakeries) && !$this->no_bakery)
+                    array_push($variants, 1);
+                if (!empty($this->desserts) && !$this->no_sweets)
+                    array_push($variants, 2);
+                if (!empty($this->others) && in_array($time, ['breakfast', 'lunch', 'dinner']))
+                    array_push($variants, 3);
 
 
-        // if ($need_fill['procent'] <= 50 && in_array($time, ['breakfast', 'lunch', 'dinner'])) {
-        //     if (in_array('soup', $need_fill['type'])) {
-        //         $variant = random_int(1, 2);
-        //         if ($variant == 1) {
-        //             $this->findMeal($need_fill, $this->maindishes, $date);
-        //         } else {
-        //             $this->findSecondMeal($need_fill, $date, $time);
-        //         }
-        //     } else {
-        //         $this->findMeal($need_fill, $this->soups, $date);
-        //     }
-        // } else {
-        //     $variant = random_int(1, 4);
-        //     if ($this->no_sweets)
-        //         $variant = random_int(1, 3);
-        //     if ($this->no_bakery) {
-        //         $arr = [1, 2, 4];
-        //         $variant = $variant != 3 ? $variant : $arr[rand(0, 2)];
-        //     }
-        //     switch ($variant) {
-        //         case 1:
-        //             $this->generateMeal($this->bakeries, $date, $time, 'bakery');
-        //             break;
-        //         case 2:
-        //             $this->generateMeal($this->desserts, $date, $time, 'dessert');
-        //             break;
-        //         case 3:
-        //             $this->generateMeal($this->others, $date, $time, 'other');
-        //             break;
-        //         case 4:
-        //             $this->generateMeal($this->products, $date, $time, 'product');
-        //             break;
-        //     }
-        // }
-
+                $variant = $this->randItemInArray($variants);
+                if ($variant == 0) {
+                    $this->generateMeal($need_fill, $this->products, $date, $time, 'product');
+                } else if ($variant == 1) {
+                    $this->generateMeal($need_fill, $this->bakeries, $date, $time, 'bakery');
+                } else if ($variant == 2) {
+                    $this->generateMeal($need_fill, $this->desserts, $date, $time, 'dessert');
+                } else if ($variant == 3) {
+                    $this->generateMeal($need_fill, $this->others, $date, $time, 'other');
+                }
+            }
+        }
 
 
     }
@@ -394,6 +424,8 @@ class MenuGenerateService
             $weigth = $type != 'product' ? self::$static_weigth[$type] : $this->randWeight();
 
             $recipe_or_product = $type != 'product' ? new Recipe($id) : new Product($id);
+            if ($recipe_or_product->weight == 0)
+                continue;
             $weigth_full = $type != 'product' ? $recipe_or_product->weight : 100;
             $meal = [
                 'kcal' => ($weigth * $recipe_or_product->kcal) / $weigth_full,
@@ -434,7 +466,7 @@ class MenuGenerateService
             array_push($meals, [
                 'points' => $points,
                 'meal_id' => $id,
-                'now_use' =>$type != 'product' ? in_array($id, $this->res_data[$date]['ids']['recipes']):in_array($id, $this->res_data[$date]['ids']['products']),
+                'now_use' => $type != 'product' ? in_array($id, $this->res_data[$date]['ids']['recipes']) : in_array($id, $this->res_data[$date]['ids']['products']),
                 'weigth' => $weigth
             ]);
         }
@@ -443,10 +475,10 @@ class MenuGenerateService
             if ($meal['points'] >= $max_points && $meal['now_use'] == false)
                 $max_points = $meal['points'];
         }
-        $filtered_meals=[];
+        $filtered_meals = [];
         foreach ($meals as $meal) {
             if ($meal['points'] == $max_points)
-                array_push($filtered_meals,$meal);
+                array_push($filtered_meals, $meal);
         }
 
         return $this->randItemInArray($filtered_meals);
@@ -551,10 +583,10 @@ class MenuGenerateService
             if ($meal['points'] >= $max_points && $meal['now_use'] == false)
                 $max_points = $meal['points'];
         }
-        $filtered_meals=[];
+        $filtered_meals = [];
         foreach ($meals as $meal) {
-            if ($meal['points'] >= $max_points-2)
-                array_push($filtered_meals,$meal);
+            if ($meal['points'] >= $max_points - 2)
+                array_push($filtered_meals, $meal);
         }
 
         return $this->randItemInArray($filtered_meals);
@@ -567,7 +599,7 @@ class MenuGenerateService
     {
         if (!empty($array)) {
             $count = count($array);
-            $index = rand(0, $count-1);
+            $index = rand(0, $count - 1);
             return $array[$index];
         } else
             return null;
@@ -595,15 +627,10 @@ class MenuGenerateService
                 $recipe_weigth = (new Recipe($new_meal->id))->weight;
                 $this->res_data[$date][$time]['nutrients']['kcal'] += ($weight * $new_meal->kcal) / $recipe_weigth;
                 $this->res_data[$date][$time]['nutrients']['fat'] += ($weight * $new_meal->fat) / $recipe_weigth;
-                ;
                 $this->res_data[$date][$time]['nutrients']['protein'] += ($weight * $new_meal->protein) / $recipe_weigth;
-                ;
                 $this->res_data[$date][$time]['nutrients']['carbonation'] += ($weight * $new_meal->carbonation) / $recipe_weigth;
-                ;
                 $this->res_data[$date][$time]['nutrients']['na'] += ($weight * $new_meal->na) / $recipe_weigth;
-                ;
                 $this->res_data[$date][$time]['nutrients']['cellulose'] += ($weight * $new_meal->cellulose) / $recipe_weigth;
-                ;
             } else {
                 $this->res_data[$date][$time]['nutrients']['kcal'] += ($weight * $new_meal->kcal) / 100;
                 $this->res_data[$date][$time]['nutrients']['fat'] += ($weight * $new_meal->fat) / 100;
