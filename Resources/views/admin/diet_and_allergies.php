@@ -24,8 +24,7 @@
                             </button>
                             <button class="button-icon button-icon-edit" onclick="href('/admin/diet/diets/edit?id=<?=$diet['id']?>')" title="Редагувати"><ion-icon
                                     name="create-outline"></ion-icon></button>
-                            <button class="button-icon button-icon-remove" onclick="Delete('/admin/diet/diets/delete?id=<?=$diet['id']?>','diet_<?=$diet['id']?>')"><ion-icon name="close-circle-outline"
-                                    title="Видалити"></ion-icon></button>
+                           
                         </div>
                     </li>
                     <?php
@@ -60,8 +59,6 @@
                             </button>
                             <button class="button-icon button-icon-edit" onclick="href('/admin/diet/allergies/edit?id=<?=$allergy['id']?>')" title="Редагувати"><ion-icon
                                     name="create-outline"></ion-icon></button>
-                            <button class="button-icon button-icon-remove" onclick="Delete('/admin/diet/allergies/delete?id=<?=$allergy['id']?>','allergy_<?=$allergy['id']?>')"><ion-icon name="close-circle-outline"
-                                    title="Видалити"></ion-icon></button>
                         </div>
                     </li>
                     <?php
