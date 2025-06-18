@@ -64,6 +64,10 @@ class Data
             "title" => "Вечеря"
         ],
     ];
+    public static function mealtimesKeys()
+    {
+        return array_column(self::$mealtimes,'id');
+    }
     /**
      * Print array
      *

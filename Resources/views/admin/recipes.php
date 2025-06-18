@@ -25,10 +25,17 @@ if (empty($recipes)) {
                                 name="ellipsis-horizontal-circle-outline"></ion-icon></button>
                         <button class="button-icon button-icon-edit" onclick="href('/admin/recipes/edit?id=<?= $recipe->id ?>')"
                             title="Редагувати"><ion-icon name="create-outline"></ion-icon></button>
-                        <button class="button-icon button-icon-remove"
+                        
+
+                                <?php
+                        if($recipe->can_be_delete&&$recipe->approved){
+                            ?>
+                           <button class="button-icon button-icon-remove"
                             onclick="Delete('/admin/recipes/delete?id=<?= $recipe->id ?>','recipe_<?= $recipe->id ?>')"><ion-icon
-                                name="close-circle-outline" title="Видалити"></ion-icon></button>
-                    </div>
+                                name="close-circle-outline" title="Видалити"></ion-icon></button><?php
+                        } 
+                        ?>
+                            </div>
                 </div>
                 <p><i><?= $recipe->type->getName() ?></i></p>
                 <p><?= $recipe->kcal ?> ккал (<span title="Білки"> <?= $recipe->protein ?> г</span>/<span

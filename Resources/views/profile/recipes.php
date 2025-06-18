@@ -16,7 +16,7 @@
                 ?>
                 <div class="recipe-card" id="recipe_<?= $recipe->id ?>">
                     <div class="row" style="margin-top: 0;">
-                        <h5><?= $recipe->title ?></h5>
+                        <h5><?=  $recipe->title ?><?= $recipe->is_liked?'<ion-icon style="color:pink;height:25px;margin-bottom:-7px" name="heart-circle-outline"></ion-icon>':'' ?></h5>
                         <div><button class="button-icon button-icon-like"
                                 onclick="href('/profile/recipes/like?id=<?= $recipe->id ?>')"
                                 title="<?= $recipe->is_liked ? 'Прибрати з улюблених' : 'Додати до улюблених' ?>">

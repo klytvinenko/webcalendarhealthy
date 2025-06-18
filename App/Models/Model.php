@@ -14,15 +14,17 @@ abstract class Model
     }
     public static function pagination($values,bool $is_admin=false)
     {
-        if(is_null(static::$table)) echo "table is null";
-        else {
-            $offset=isset($_GET['page'])?$_GET['page']-1:0;
-            $offset=$offset*$values;
-            if($is_admin) return DB::selectByQuery("SELECT * FROM ".static::$table." LIMIT ".$values." OFFSET ".$offset.";");
-            $res1= DB::selectByQuery("SELECT * FROM ".static::$table." WHERE user_id IS NULL LIMIT ".$values." OFFSET ".$offset.";");
-            $res2=DB::selectByQuery("SELECT * FROM ".static::$table." WHERE user_id=".User::id()." LIMIT ".$values." OFFSET ".$offset.";");
-            return array_merge($res1,$res2);
+        if (is_null(static::$table)) {
+            echo "table is null";
+            return [];
         }
+    
+        $offset = isset($_GET['page']) ? ($_GET['page'] - 1) * $values : 0;
+    
+        if ($is_admin) {
+            return DB::selectByQuery("SELECT * FROM " . static::$table . " ORDER BY id DESC LIMIT $values OFFSET $offset");
+        }
+        return DB::selectByQuery("SELECT * FROM " . static::$table . " WHERE user_id IS NULL OR user_id = ".User::id()." ORDER BY id DESC LIMIT $values OFFSET  $offset");
     }
     public static function where(string $conditions,$order=null,$limit=null)
     {

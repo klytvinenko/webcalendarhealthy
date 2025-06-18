@@ -29,10 +29,10 @@ class RecipeController extends Controller
         $item_on_page=12;
         $recipes = Recipe::pagination($item_on_page);
         $recipes=RecipeService::fullData($recipes);
-        // self::render('Рецепти', 'admin/recipes', 'admin', [
-        //     'recipes'=>$recipes,
-        //     'item_on_page'=>$item_on_page,
-        // ]);
+        self::render('Рецепти', 'admin/recipes', 'admin', [
+            'recipes'=>$recipes,
+            'item_on_page'=>$item_on_page,
+        ]);
     }
     
     public function show($params)
@@ -117,6 +117,41 @@ class RecipeController extends Controller
         }
         Router::redirect('/admin/recipes');
     }
+    public function approve($params)
+    {
+        $id=$params['id'];
+        Recipe::update('id=' . $id, [
+            "user_id" => null,
+        ]);
+        Router::redirect('/admin/recipes');
+    }
+    public function replace($params)
+    {
+        $copy_id=$params['new_id'];
+        $original_id=$params['original_id'];
+        
+        $copy=new Recipe($copy_id);
+        $original=new Recipe($original_id);
+
+        Recipe::update('id='.$original_id,[
+            'title' => $copy->title,
+            'type' => $copy->type,
+            'description' => $copy->description,
+        ]);
+
+    //     //rechange new_id in DB
+    //     DB::delete('allergies_on_products', 'product_id=' . $original_id);
+    //     DB::delete('product_in_diets', 'product_id=' . $original_id);
+
+    //     DB::update('allergies_on_products','product_id='.$copy_id,['product_id'=>$original_id]);
+    //     DB::update('product_in_diets','product_id='.$copy_id,['product_id'=>$original_id]);
+    //     DB::update('meals','product_id='.$copy_id,['product_id'=>$original_id]);
+    //     DB::update('products_in_recipes','product_id='.$copy_id,['product_id'=>$original_id]);
+    //     DB::update('liked_products','product_id='.$copy_id,['product_id'=>$original_id]);
+    //     //delete with new_id
+        RecipeService::delete($id);
+        Router::redirect('/admin/recipes');
+    }
     public function edit($params)
     {
         $id = $params['id'];
@@ -159,20 +194,17 @@ class RecipeController extends Controller
     }
     public function updaterecipe($params,$request)
     {
-        $id=$params['id'];
-        Recipe::update('id='.$id,[
+        Recipe::create([
             'title' => $request['title'],
             'type' => $request['type'],
             'description' => $request['description'],
             'user_id' => User::id(),
         ]);
 
-        DB::delete('products_in_recipes','recipe_id='.$id);
-        DB::delete('diets','recipe_id='.$id);
-
+        $recipe_id = DB::lastInsertId('recipes');
         for ($i = 0; $i < count($request['ingredients']); $i++) {
             DB::insert('products_in_recipes', [
-                'recipe_id' => $id,
+                'recipe_id' => $recipe_id,
                 'product_id' => $request['ingredients'][$i],
                 'weight' => $request['ingredients_weigths'][$i],
                 'user_id' => User::id(),
@@ -181,7 +213,7 @@ class RecipeController extends Controller
         if (isset($request['diets'])) {
             foreach ($request['diets'] as $diet_id) {
                 DB::insert('recipe_in_diets', [
-                    'recipe_id' => $id,
+                    'recipe_id' => $recipe_id,
                     'diet_id' => $diet_id
                 ]);
             }
@@ -238,20 +270,10 @@ class RecipeController extends Controller
     }
     public function deleterecipebyadmin($id)
     {
-        DB::delete('meals', condition: "recipe_id=" . $id);
-        DB::delete('recipe_in_diets: als', "recipe_id=" . $id);
-        DB::delete('products_in_recipes', "recipe_id=" . $id);
-        DB::delete('liked_recipes', "recipe_id=" . $id);
-        Recipe::delete("id=" . $id);
-        // Router::redirect('/admin/recipes');
+        RecipeService::delete($id);
     }
     public function deleterecipe($id)
     {
-        DB::delete('meals', condition: "recipe_id=" . $id);
-        DB::delete('recipe_in_diets', "recipe_id=" . $id);
-        DB::delete('products_in_recipes', "recipe_id=" . $id);
-        DB::delete('liked_recipes', "recipe_id=" . $id);
-        Recipe::delete("id=" . $id);
-        // Router::redirect('/profile/recipes');
+        RecipeService::delete($id);
     }
 }

@@ -16,6 +16,7 @@ $router->post('/api/weights/store', [WeightController::class, "APIstore"], UserT
 $router->post('/api/workouts/store', [WorkoutController::class, "APIstore"], UserType::LOGINED);
 $router->post('/api/meals/store/today', [MealController::class, "APIstoremealtoday"], UserType::LOGINED);
 $router->post('/api/meals/calendar/store', [MealController::class, "APIstoremealfromcalendar"], UserType::LOGINED);
+$router->post('/api/meals/delete', [MealController::class, "APIstoremealfromcalendar"], UserType::LOGINED);
 $router->post('/api/weights/calendar/store', [WeightController::class, "APIstoreweightfromcalendar"], UserType::LOGINED);
 
 $router->get('/api/weight/progress', [WeightController::class, "APIprogress"], UserType::LOGINED);

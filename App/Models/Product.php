@@ -19,10 +19,14 @@ class Product extends Model
     public float $cellulose;
     public array $allergies;
     public array $diets;
+
     public bool $approved;
-    public bool $is_copy;
-    
     public User $user;
+    public bool $is_copy;
+    public bool $has_copies;
+    public array $copies;
+    public bool $can_be_delete;
+
     public function __construct(array|int $data)
     {
         if(is_int($data)){
@@ -38,9 +42,13 @@ class Product extends Model
         $this->carbonation=$data['carbonation']??0;
         $this->na=$data['na']??0;
         $this->cellulose=$data['cellulose']??0;
-        $this->approved=is_null($data['user_id']);
+
+        $this->approved=is_null($data['user_id']);//затверджений
         $this->user=$this->approved?new User(1):new User($data['user_id']);
         $this->is_copy=$this->isCopy();
+        $this->can_be_delete=$this->canBeDelete();
+        $this->copies=$this->getCopies();
+        $this->has_copies=!empty($this->copies);
 
 
         $this->allergies=$this->allergies();
@@ -48,10 +56,31 @@ class Product extends Model
     
     
     }
+    public function canBeDelete(){
+        if(!empty(DB::select('meals','id',"product_id=".$this->id))) return false;
+        if(!empty(DB::select('products_in_recipes','id',"product_id=".$this->id))) return false;
+        if(!empty(DB::select('liked_products','id',"product_id=".$this->id))) return false;
+        else return true;
+    }
+    public function getCopies(){
+        $id=$this->id;
+        $title=$this->title;
+        $copies=DB::select('products','*',"id>$id AND title='$title'");
+        $res=[];
+        foreach ($copies as $copy) {
+            $user=new User($copy['user_id']);
+            $copy['user_login']=$user->login;
+            $res[]=$copy;
+        }
+        return $res;
+    }
     public function isCopy(){
-        if($this->approved==false) return false;
+        if($this->approved==true) return false;
         else{
-            
+        $id=$this->id;
+        $title=$this->title;
+           $finded=DB::select('products','id',"id!=$id AND title='$title'");
+           return !empty($finded);
         }
     }
     public function diets(){

@@ -52,6 +52,13 @@ class Recipe extends Model
     public array $diets;
     public array $ingredients;
 
+    public bool $approved;
+    public User $user;
+    public bool $is_copy;
+    public bool $has_copies;
+    public array $copies;
+    public bool $can_be_delete;
+
     public function __construct(array|int $data)
     {
         if (is_int($data)) {
@@ -90,7 +97,41 @@ class Recipe extends Model
         $this->diets = $this->diets();
         $this->allergies = $this->allergies();
 
+        $this->approved=is_null($data['user_id']);//затверджений
+        $this->user=$this->approved?new User(1):new User($data['user_id']);
+        $this->is_copy=$this->isCopy();
+        $this->can_be_delete=$this->canBeDelete();
+        $this->copies=$this->getCopies();
+        $this->has_copies=!empty($this->copies);
     }
+    public function canBeDelete(){
+        if(!empty(DB::select('meals','id',"recipe_id=".$this->id))) return false;
+        if(!empty(DB::select('products_in_recipes','id',"recipe_id=".$this->id))) return false;
+        if(!empty(DB::select('liked_recipes','id',"recipe_id=".$this->id))) return false;
+        else return true;
+    }
+    public function getCopies(){
+        $id=$this->id;
+        $title=$this->title;
+        $copies=DB::select('recipes','*',"id>$id AND title='$title'");
+        $res=[];
+        foreach ($copies as $copy) {
+            $user=new User($copy['user_id']);
+            $copy['user_login']=$user->login;
+            $res[]=$copy;
+        }
+        return $res;
+    }
+    public function isCopy(){
+        if($this->approved==true) return false;
+        else{
+        $id=$this->id;
+        $title=$this->title;
+           $finded=DB::select('recipes','id',"id!=$id AND title='$title'");
+           return !empty($finded);
+        }
+    }
+
     public function allergies()
     {
         return array_column(DB::selectByQuery('SELECT a.* FROM products_in_recipes as pir JOIN products AS p ON p.id=pir.product_id JOIN allergies_on_products AS aop ON p.id=aop.product_id JOIN allergies AS a ON a.id=aop.allergy_id GROUP BY a.id;'), 'name');

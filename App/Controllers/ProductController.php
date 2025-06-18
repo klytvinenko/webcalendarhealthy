@@ -142,6 +142,46 @@ class ProductController extends Controller
         Router::redirect('/admin/products');
     }
     
+    public function approve($params)
+    {
+        $id=$params['id'];
+        Product::update('id=' . $id, [
+            "user_id" => null,
+        ]);
+        Router::redirect('/admin/products');
+    }
+    public function replace($params)
+    {
+        $copy_id=$params['new_id'];
+        $original_id=$params['original_id'];
+        
+        $copy=new Product($copy_id);
+        $original=new Product($original_id);
+
+        Product::update('id='.$original_id,[
+            "title" => $copy->title,
+            "type" => $copy->type,
+            "kcal" => $copy->kcal,
+            "fat" => $copy->fat,
+            "protein" => $copy->protein,
+            "carbonation" => $copy->carbonation,
+            "na" => $copy->na,
+            "cellulose" => $copy->cellulose,
+        ]);
+
+        //rechange new_id in DB
+        DB::delete('allergies_on_products', 'product_id=' . $original_id);
+        DB::delete('product_in_diets', 'product_id=' . $original_id);
+
+        DB::update('allergies_on_products','product_id='.$copy_id,['product_id'=>$original_id]);
+        DB::update('product_in_diets','product_id='.$copy_id,['product_id'=>$original_id]);
+        DB::update('meals','product_id='.$copy_id,['product_id'=>$original_id]);
+        DB::update('products_in_recipes','product_id='.$copy_id,['product_id'=>$original_id]);
+        DB::update('liked_products','product_id='.$copy_id,['product_id'=>$original_id]);
+        //delete with new_id
+        ProductService::delete($copy_id);
+        Router::redirect('/admin/products');
+    }
     public function updateproduct($params, $request)
     {
         ProductService::create($request);

@@ -35,13 +35,28 @@ class WorkoutController extends Controller
             'workout_number'=>$workout_number
         ]);
     }
+    public function showbyadmin($params)
+    {
+        $id = $params['id'];
+        $workout = new Workout($id);
+        //find
+        $workout_number= DB::selectByQuery('SELECT COUNT(id) as count FROM workouts_user WHERE workout_id='.$id)[0]['count'];
+        self::render('Перегляд тренування', 'admin/workout', 'admin', [
+            'workout' => $workout,
+            'workout_number'=>$workout_number
+        ]);
+    }
     public function indexbyadmin()
     {
 
         $workouts = Workout::all();
 
+        $res=[];
+        foreach ($workouts as $workout) {
+            $res[]=new Workout($workout);
+        }
         self::render('Тренування', 'admin/workouts', 'admin', [
-            'workouts' => $workouts
+            'workouts' => $res
         ]);
     }
     public function APItoday()
@@ -127,13 +142,39 @@ class WorkoutController extends Controller
         $workout = new Workout($id);
         self::render($workout->title, 'admin_form/workout_edit', 'admin', ['workout' => $workout]);
     }
+    public function approve($params)
+    {
+        $id=$params['id'];
+        Workout::update('id=' . $id, [
+            "user_id" => null,
+        ]);
+        Router::redirect('/admin/workouts');
+    }
+    public function replace($params)
+    {
+        $copy_id=$params['new_id'];
+        $original_id=$params['original_id'];
+        
+        $copy=new Workout($copy_id);
+        $original=new Workout($original_id);
+
+        Workout::update('id='.$original_id,[
+            "title" => $copy->title,
+            "description" =>$copy->description,
+            "kcal" => $copy->kcal
+        ]);
+
+        DB::delete('workouts_user', "workout_id=" . $copy_id);
+        Workout::delete("id=" . $copy_id);
+        Router::redirect('/admin/workouts');
+    }
     public function updateworkout($params, $request)
     {
-        $id = $params['id'];
-        Workout::update('id=' . $id, [
+        Workout::create([
             "title" => $request['title'],
             "description" => $request['description'],
             "kcal" => $request['kcal'],
+            "user_id"=>User::id()
         ]);
         Router::redirect('/profile/workouts');
     }
@@ -168,13 +209,10 @@ class WorkoutController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
-        // Router::redirect('/profile/workouts');
     }
     public function deleteworkout($id)
     {
         DB::delete('workouts_user', "workout_id=" . $id);
         Workout::delete("id=" . $id);
-        echo 1;
-        // Router::redirect('/profile/workouts');
     }
 }

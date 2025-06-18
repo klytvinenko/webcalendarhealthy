@@ -27,7 +27,7 @@
                 foreach ($products as $product) {
                     ?>
                     <tr id="product_<?= $product['id'] ?>">
-                        <td><?= $product['title'] ?></td>
+                        <td><?= $product['title'] ?><?= $product['is_liked']?'<ion-icon style="color:pink;height:25px;margin-bottom:-7px" name="heart-circle-outline"></ion-icon>':'' ?></td>
                         <td><?= $product['type'] == 'product' ? '<ion-icon title="Може використовуватись як самостійний продукт" class="black-icon" name="fast-food-outline"></ion-icon>' : ' - ' ?>
                         </td>
                         <td><?= $product['kcal'] ?></td>

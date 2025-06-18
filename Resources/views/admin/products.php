@@ -37,18 +37,13 @@ if (empty($products)) {
                     <td><?= $product->carbonation ?></td>
                     <td><?= $product->na ?></td>
                     <td><?= $product->cellulose ?></td>
-                    </td>
                     <td class="icons">
                         <?php
-                        if($product->approved&&!$product->is_copy){
+                        if(!$product->approved&&!$product->is_copy){
                             ?>
-                            <button class="button-icon button-icon-add" onclick="href('/admin/products/show?id=<?= $product->id ?>')" title="Зберегти для всіх"><ion-icon name="checkmark-outline"></ion-icon></button>
+                            <button class="button-icon button-icon-add" onclick="href('/admin/products/approve?id=<?= $product->id ?>')" title="Зробити доступним для всіх"><ion-icon name="lock-open-outline"></ion-icon></button>
                         <?php
-                        } else {
-                        ?>
-                            <button class="button-icon button-icon-primary" onclick="href('/admin/products/show?id=<?= $product->id ?>')" title="Замінити"><ion-icon name="sync-outline"></ion-icon></button>
-                            <?php
-                        }
+                        } 
                         ?>
                         <button class="button-icon button-icon-show"
                             onclick="href('/admin/products/show?id=<?= $product->id ?>')" title="Переглянути"><ion-icon
@@ -56,10 +51,16 @@ if (empty($products)) {
                         <button class="button-icon button-icon-edit"
                             onclick="href('/admin/products/edit?id=<?= $product->id ?>')" title="Редагувати"><ion-icon
                                 name="create-outline"></ion-icon></button>
-                        <button class="button-icon button-icon-remove"
+                                <?php
+                        if($product->can_be_delete&&$product->approved){
+                            ?>
+                            <button class="button-icon button-icon-remove"
                             onclick="Delete('/admin/products/delete?id=<?= $product->id?>','product_<?= $product->id ?>')"><ion-icon
                                 name="close-circle-outline" title="Видалити"></ion-icon></button>
-                    </td>
+                        <?php
+                        } 
+                        ?>
+                            </td>
 
                 </tr>
                 <?php

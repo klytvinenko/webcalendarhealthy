@@ -87,7 +87,7 @@ class MealController extends Controller
     {
         $date = $params['date'];
         $date_text = date("d", strtotime($date)) . ' (' . Data::$week_days_ua[date("w", strtotime($date))] . ') ' . Data::$months_ua[date("m", strtotime($date))] . ' ' . date("Y", strtotime($date));
-        $user = new User(User::id());
+        $user = new User();
 
         $trainings = TrainingService::bydate($date);
         $menu = MenuService::menu($date);

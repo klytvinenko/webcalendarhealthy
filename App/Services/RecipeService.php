@@ -26,4 +26,12 @@ class RecipeService
         else
             return true;
     }
+    public static function delete($id)
+    {
+        DB::delete('meals', "recipe_id=" . $id);
+        DB::delete('recipe_in_diets', "recipe_id=" . $id);
+        DB::delete('products_in_recipes', "recipe_id=" . $id);
+        DB::delete('liked_recipes', "recipe_id=" . $id);
+        Recipe::delete("id=" . $id);
+    }
 }

@@ -108,11 +108,11 @@ class ProductService
     
     public static function delete($id)
     {
-        DB::delete('meals', condition: "product_id=" . $id);
-        DB::delete('products_in_recipes', condition: "product_id=" . $id);
-        DB::delete('product_in_diets', condition: "product_id=" . $id);
-        DB::delete('allergies_on_products', condition: "product_id=" . $id);
-        DB::delete('liked_products', condition: "product_id=" . $id);
+        DB::delete('meals', "product_id=" . $id);
+        DB::delete('products_in_recipes', "product_id=" . $id);
+        DB::delete('product_in_diets', "product_id=" . $id);
+        DB::delete('allergies_on_products',  "product_id=" . $id);
+        DB::delete('liked_products',  "product_id=" . $id);
         Product::delete("id=" . $id);
     }
 }

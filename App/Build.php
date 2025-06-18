@@ -1,5 +1,6 @@
 <?php
 namespace App;
+use App\Models\User;
 class Build
 {
     static function Form()
@@ -86,14 +87,13 @@ class Build
     {
         $res = '';
         $page = $_GET['page'] ?? 1;
-        // unset($_SESSION['tables_lengths']);
-        $items_length = DB::selectByQuery('SELECT count(id) as count_ FROM '.$table.';')[0]['count_'];
-        // if ($items_length == 0) {
-        //     $items_length = DB::selectByQuery('SELECT count(id) as count_ FROM '.$table.';')[0]['count_'];
-        //     $_SESSION['tables_lengths'][$table] = $items_length;
-        // }
-        $last_page = round($items_length / $item_on_page) ;
-        $last_page = ($items_length % $item_on_page)!=0?$last_page:$last_page-1;
+        $items_length =  DB::selectByQuery('SELECT COUNT(id) as count FROM ' . $table . ' WHERE user_id IS NULL OR user_id = '.User::id())[0]['count'];
+            
+        $last_page = ceil($items_length / $item_on_page);
+
+        if ($last_page == 0) {
+            return '';
+        }
         $link .= '?page=';
         $n = $page;
         if ($last_page >= 5) {
